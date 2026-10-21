@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Przewodnik podróży z Claude Code</title>
+<style>
+:root{
+  --tlo:#fbfaf7; --tekst:#1f2328; --przygaszony:#5b6470; --linia:#e1ddd3; --karta:#ffffff;
+  --akcent:#0b6e5f; --akcent-tlo:#e3f3ef; --uwaga:#fff4d6; --uwaga-linia:#e6c25a;
+  --wazne:#fde8e6; --wazne-linia:#e07a70; --sprawdz:#e8f0fb; --sprawdz-linia:#7aa3e0;
+  --dlaczego:#f1ecfa; --dlaczego-linia:#a58ad8; --kod:#161b22; --kod-tekst:#e6edf3;
+  --sk-a-tlo:#e3f3ef; --sk-a-linia:#0b6e5f; --sk-k2-tlo:#fff4d6; --sk-k2-linia:#c9a53f;
+  --sk-k4-tlo:#fde8e6; --sk-k4-linia:#d0655b; --sk-b-tlo:#e8f0fb; --sk-b-linia:#5f8ccc;
+}
+@media (prefers-color-scheme:dark){:root{
+  --tlo:#14171a; --tekst:#e6e8ea; --przygaszony:#9aa4ae; --linia:#2a2f35; --karta:#1b1f24;
+  --akcent:#4fc3ad; --akcent-tlo:#16302b; --uwaga:#3a3118; --uwaga-linia:#8a7430;
+  --wazne:#3b1f1d; --wazne-linia:#a4544c; --sprawdz:#182535; --sprawdz-linia:#4a6fa3;
+  --dlaczego:#251e36; --dlaczego-linia:#7a62ad; --kod:#0d1117; --kod-tekst:#e6edf3;
+  --sk-a-tlo:#16302b; --sk-a-linia:#4fc3ad; --sk-k2-tlo:#3a3118; --sk-k2-linia:#d1b24f;
+  --sk-k4-tlo:#3b1f1d; --sk-k4-linia:#d97a70; --sk-b-tlo:#182535; --sk-b-linia:#6f9bd6;
+}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--tlo);color:var(--tekst);font:17px/1.65 "Segoe UI",system-ui,sans-serif}
+header.gora{padding:40px 16px 24px;border-bottom:1px solid var(--linia);background:var(--karta)}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+h1{font-size:2rem;line-height:1.25;margin:0 0 12px}
+h2{font-size:1.5rem;margin:0 0 12px;line-height:1.3}
+h3{font-size:1.15rem;margin:24px 0 8px}
+h4{font-size:1.02rem;margin:20px 0 6px;color:var(--akcent)}
+p{margin:0 0 14px}
+code{background:var(--akcent-tlo);padding:1px 6px;border-radius:5px;font-size:.92em}
+section{padding:28px 0;border-bottom:1px solid var(--linia)}
+section.czesc{background:var(--akcent-tlo);padding:22px 0}
+section.czesc h2{margin:0}
+.etykieta{display:inline-block;background:var(--akcent);color:#fff;border-radius:999px;padding:2px 12px;font-size:.8rem;margin-bottom:8px;letter-spacing:.03em}
+.ramka{border-left:5px solid;border-radius:8px;padding:12px 16px;margin:16px 0}
+.ramka>:last-child{margin-bottom:0}
+.ramka .nag{font-weight:700;display:block;margin-bottom:6px}
+.dlaczego{background:var(--dlaczego);border-color:var(--dlaczego-linia)}
+.sprawdz{background:var(--sprawdz);border-color:var(--sprawdz-linia)}
+.uwaga{background:var(--uwaga);border-color:var(--uwaga-linia)}
+.wazne{background:var(--wazne);border-color:var(--wazne-linia)}
+.prompt{margin:18px 0;border:1px solid var(--linia);border-radius:10px;overflow:hidden;background:var(--karta)}
+.prompt .pasek{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;background:var(--akcent-tlo);font-weight:600}
+.prompt button{font:inherit;font-size:.85rem;border:1px solid var(--akcent);background:transparent;color:var(--akcent);border-radius:6px;padding:3px 12px;cursor:pointer}
+.prompt button:hover{background:var(--akcent);color:#fff}
+.prompt pre{margin:0;padding:14px 16px;background:var(--kod);color:var(--kod-tekst);white-space:pre-wrap;word-wrap:break-word;font:14px/1.55 Consolas,"Cascadia Mono",monospace;overflow-x:auto}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:.95rem;background:var(--karta)}
+th,td{border:1px solid var(--linia);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--akcent-tlo)}
+.tabela-wrap{overflow-x:auto}
+svg.schemat{width:100%;height:auto;margin:12px 0;background:var(--karta);border:1px solid var(--linia);border-radius:10px}
+svg text{fill:var(--tekst);font-family:"Segoe UI",system-ui,sans-serif}
+svg .sk-a{fill:var(--sk-a-tlo);stroke:var(--sk-a-linia)}
+svg .sk-k2{fill:var(--sk-k2-tlo);stroke:var(--sk-k2-linia)}
+svg .sk-k4{fill:var(--sk-k4-tlo);stroke:var(--sk-k4-linia)}
+svg .sk-b{fill:var(--sk-b-tlo);stroke:var(--sk-b-linia)}
+svg .strzalka{stroke:var(--przygaszony)}
+svg .strzalka-grot{fill:var(--przygaszony)}
+svg g.podpis text,svg text.podpis{fill:var(--przygaszony)}
+.male{font-size:.9rem;color:var(--przygaszony)}
+ul,ol{margin:0 0 14px;padding-left:24px}
+li{margin:4px 0}
+
+[hidden]{display:none!important}
+header.gora .wrap{max-width:1220px}
+.zakladki{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.zakladki button{font:inherit;font-weight:600;border:1px solid var(--akcent);background:transparent;color:var(--akcent);border-radius:999px;padding:6px 18px;cursor:pointer}
+.zakladki button:hover{background:var(--akcent-tlo)}
+.zakladki button[aria-selected="true"]{background:var(--akcent);color:#fff}
+.uklad{max-width:1220px;margin:0 auto;padding:0 16px;display:grid;grid-template-columns:270px minmax(0,1fr);gap:36px;align-items:start}
+main{min-width:0;max-width:860px}
+.boczny{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;padding:12px 4px 12px 0;font-size:.93rem;scrollbar-width:thin}
+.boczny summary{display:none;cursor:pointer;font-weight:700;padding:8px 0}
+.boczny .grupa{margin:14px 0 4px;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--przygaszony);font-weight:700;padding-left:13px}
+.boczny a{display:block;padding:3px 10px;border-left:3px solid transparent;color:var(--tekst);text-decoration:none;border-radius:0 6px 6px 0;line-height:1.4}
+.boczny a.pod{padding-left:22px;font-size:.9rem}
+.boczny a:hover{background:var(--akcent-tlo)}
+.boczny a.aktywny{border-left-color:var(--akcent);background:var(--akcent-tlo);font-weight:600;color:var(--akcent)}
+.czesc .wrap{max-width:none;margin:0;padding:0 16px}
+.przycisk{display:inline-block;font:inherit;font-weight:600;font-size:.95rem;border:1px solid var(--akcent);background:var(--akcent);color:#fff;border-radius:8px;padding:6px 16px;cursor:pointer;text-decoration:none;margin:0 8px 8px 0}
+.przycisk.jasny{background:transparent;color:var(--akcent)}
+#panel-wynik{max-width:1220px;margin:0 auto;padding:16px}
+.pasek-wyniku{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.pasek-wyniku p{margin:0;font-size:.92rem;color:var(--przygaszony);max-width:760px}
+#ramka-wynik{width:100%;height:calc(100vh - 150px);min-height:560px;border:1px solid var(--linia);border-radius:10px;background:#fff}
+@media(max-width:900px){
+  .uklad{grid-template-columns:1fr;gap:0}
+  .boczny{position:static;max-height:none;border-bottom:1px solid var(--linia);margin-bottom:8px}
+  .boczny summary{display:block}
+  #ramka-wynik{height:78vh}
+}
+footer{padding:28px 0 60px;color:var(--przygaszony);font-size:.9rem}
+@media print{.prompt button,.zakladki,.boczny,.przycisk{display:none}#panel-wynik{display:none}.uklad{display:block}}
+</style>
+</head>
+<body>
+<header class="gora"><div class="wrap">
+  <h1>Przewodnik podróży z Claude Code: od pytania „gdzie jechać” do gotowej strony z mapą</h1>
+  <p>Instrukcja krok po kroku, zbudowana na prawdziwym przebiegu: dwutygodniowy wypad do Argentyny. Część A to wyszukiwanie i plan, w którym każda informacja ma źródło i datę. Część B to dodatek: strona HTML z mapą, zdjęciami i przelicznikiem walut. Na koniec dwa skille, które powtarzają to samo dla każdego innego kraju.</p>
+  <div class="zakladki" role="tablist" aria-label="Widok">
+    <button type="button" role="tab" id="zak-instrukcja" aria-selected="true" aria-controls="panel-instrukcja">Instrukcja</button>
+    <button type="button" role="tab" id="zak-wynik" aria-selected="false" aria-controls="panel-wynik">Wynik wzorcowy: strona z Argentyny</button>
+  </div>
+</div></header>
+
+
+
+<div id="panel-instrukcja" role="tabpanel" aria-labelledby="zak-instrukcja"><div class="uklad">
+<details class="boczny" id="boczny" open><summary>Spis treści</summary><nav aria-label="Spis treści">
+<div class="grupa">Wstęp</div>
+<a href="#zanim">0. Zanim zaczniesz</a>
+<a href="#dlaczego-etapy">1. Jak to działa i po co etapy</a>
+<div class="grupa">Część A: wyszukiwanie i plan</div>
+<a href="#a0">A0 Założenia</a>
+<a href="#a1">A1 Plan badań</a>
+<a href="#a2">A2 Zwiad w regionach (K1)</a>
+<a href="#a3">A3 Analiza i wybór trasy (K2)</a>
+<a href="#a4">A4 Pogłębienie trasy (K3)</a>
+<a href="#a5">A5 Kulinaria</a>
+<a href="#a6">A6 Weryfikacja i pułapki</a>
+<a href="#a7">A7 Zapis trasy do pliku</a>
+<div class="grupa">Część B: strona (dodatek)</div>
+<a href="#b1">B1 Zdjęcia z licencją</a>
+<a href="#b2">B2 Współrzędne</a>
+<a href="#b3">B3 Budowa strony</a>
+<a href="#b4">B4 Przelicznik walut</a>
+<a href="#b5">B5 Zdjęcia na pełnym ekranie</a>
+<a href="#b6">B6 Test strony</a>
+<div class="grupa">Na koniec</div>
+<a href="#skille">Zapis w dwóch skillach</a>
+<a href="#dodac">Co jeszcze warto dodać</a>
+<a href="#problemy">Typowe problemy</a>
+<a href="#wynik-opis">Wynik wzorcowy</a>
+</nav></details>
+<main>
+
+<section id="zanim">
+  <h2>0. Zanim zaczniesz</h2>
+  <p>W tej instrukcji Claude Code przygotuje <strong>przewodnik po podróży</strong>, w którym nic nie jest wzięte „z głowy modelu”. Przykład z budowy wzorcowej: dwa tygodnie w Argentynie, marzec, jedna osoba, trekking, budżet 15 000 zł bez lotu, noclegi minimum 4 gwiazdki, bezpieczeństwo najważniejsze.</p>
+  <p>Gotowy wynik z budowy wzorcowej zobaczysz w zakładce <strong>„Wynik wzorcowy”</strong> na górze strony (i w sekcji na samym końcu).</p>
+  <p>Efekt, który dostaniesz:</p>
+  <ul>
+    <li><strong>część A</strong>: raporty o regionach, kilka wariantów trasy do wyboru, plan dzień po dniu, noclegi z ocenami, kulinaria, budżet i listę rzeczy do sprawdzenia. Każda liczba ma <strong>źródło i datę</strong>, a to, czego nie udało się potwierdzić, jest wprost oznaczone;</li>
+    <li><strong>część B</strong> (opcjonalna): jedna strona HTML z interaktywną mapą trasy, zdjęciami na wolnych licencjach (z autorami), zdjęciami na pełnym ekranie i przelicznikiem walut z kursami NBP.</li>
+  </ul>
+  <h3>Wymagania</h3>
+  <div class="tabela-wrap"><table>
+    <tr><th>Co</th><th>Po co</th></tr>
+    <tr><td><strong>Claude Code</strong>, plan Pro lub wyższy</td><td>prowadzi całą pracę i uruchamia podagentów</td></tr>
+    <tr><td><strong>Rozszerzenie Claude in Chrome</strong> i przeglądarka Chrome</td><td>wyszukiwarka daje często same fragmenty stron albo wyniki z jednego kraju. Prawdziwe ceny, opłaty parkowe i godziny są na stronach oficjalnych, a do nich trzeba wejść przeglądarką</td></tr>
+    <tr><td><strong>Python 3.11 lub nowszy</strong> (tylko część B)</td><td>skrypty, które składają stronę z danych</td></tr>
+    <tr><td><strong>Folder projektu</strong>, np. <code>Dokumenty\podroze\argentyna</code></td><td>wszystko, co powstanie, zostaje w plikach; można przerwać i wrócić</td></tr>
+  </table></div>
+  <div class="ramka wazne"><span class="nag">Ważne</span>Podagentów wolno uruchamiać w przeglądarce kilku naraz, ale nie więcej niż 3-4, a każdy musi otworzyć <strong>własną kartę</strong>. W budowie wzorcowej agenci pracowali równolegle i żaden nie przeszkadzał innym, ale to wymaga jasnego polecenia w prompcie. Prompty poniżej już je zawierają.</div>
+  <div class="ramka sprawdz"><span class="nag">Jak wypełniać prompty</span>Treść każdego prompta jest stała. Dane, które zmieniasz (kraj, termin, budżet, wybrany wariant, nazwy), wpisujesz <strong>w jednym miejscu: w bloku ZMIENNE na samym końcu prompta</strong>. Wklej prompt, uzupełnij ten blok i wyślij. Puste pola Claude uzupełni domyślną wartością z nawiasu albo o nie zapyta (w kroku A0 pyta tylko o brakujące). Prompty bez bloku ZMIENNE wysyłasz bez zmian.</div>
+  <div class="ramka uwaga"><span class="nag">Uwaga</span>Twoje wyniki będą inne niż w przykładach: ceny, loty i wolne pokoje zmieniają się codziennie, a podagenci każdorazowo piszą teksty od nowa. Dlatego instrukcja uczy <strong>sposobu pracy</strong>, nie przepisuje jednego wyniku.</div>
+</section>
+
+<section id="dlaczego-etapy">
+  <h2>1. Jak to działa i po co tyle etapów</h2>
+  <p>Najprościej byłoby napisać: „zaplanuj mi dwa tygodnie w Argentynie”. Claude odpowie od razu i całkiem składnie. Problem w tym, że <strong>nie wiesz, co z tej odpowiedzi jest prawdą</strong>.</p>
+  <svg class="schemat" viewBox="0 0 900 250" role="img" aria-label="Schemat: założenia, zwiad, wybór trasy przez człowieka, pogłębienie, weryfikacja, strona">
+    <defs><marker id="strz" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="strzalka-grot"/></marker></defs>
+    <g font-size="14" text-anchor="middle">
+      <rect x="10" y="30" width="125" height="78" rx="10" class="sk-a"/><text x="72" y="58" font-weight="700">A0 Założenia</text><text x="72" y="80">rozmowa,</text><text x="72" y="98">bez szukania</text>
+      <rect x="165" y="30" width="125" height="78" rx="10" class="sk-a"/><text x="227" y="58" font-weight="700">K1 Zwiad</text><text x="227" y="80">kilku agentów,</text><text x="227" y="98">szeroko i płytko</text>
+      <polygon points="365,20 425,69 365,118 305,69" class="sk-k2"/><text x="365" y="66" font-weight="700">K2</text><text x="365" y="84">TY wybierasz</text>
+      <rect x="440" y="30" width="125" height="78" rx="10" class="sk-a"/><text x="502" y="58" font-weight="700">K3 Pogłębienie</text><text x="502" y="80">wybrana trasa,</text><text x="502" y="98">źródła oficjalne</text>
+      <rect x="595" y="30" width="125" height="78" rx="10" class="sk-k4"/><text x="657" y="58" font-weight="700">K4 Bramki</text><text x="657" y="80">skrypt + osobny</text><text x="657" y="98">agent kontrolny</text>
+      <rect x="750" y="30" width="140" height="78" rx="10" class="sk-b"/><text x="820" y="58" font-weight="700">Część B</text><text x="820" y="80">strona, mapa,</text><text x="820" y="98">kursy walut</text>
+    </g>
+    <g class="strzalka" stroke-width="2" fill="none" marker-end="url(#strz)">
+      <path d="M137,69 H160"/><path d="M292,69 H300"/><path d="M427,69 H436"/><path d="M567,69 H590"/><path d="M722,69 H745"/>
+    </g>
+    <g font-size="13" class="podpis" text-anchor="middle">
+      <text x="227" y="140">raporty w plikach,</text><text x="227" y="158">do rozmowy wraca</text><text x="227" y="176">tylko skrót</text>
+      <text x="365" y="140">2-3 warianty,</text><text x="365" y="158">decyzja człowieka</text>
+      <text x="502" y="140">ceny z datą,</text><text x="502" y="158">noclegi z ocenami</text>
+      <text x="657" y="140">jeśli błąd,</text><text x="657" y="158">wracamy do K3</text>
+    </g>
+    <text x="450" y="228" font-size="13" text-anchor="middle" class="podpis">Każdy etap zapisuje wynik do plików. Następny czyta pliki, nie pamięć rozmowy.</text>
+  </svg>
+
+  <h3>Cztery rzeczy, które psują jednorazową odpowiedź</h3>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego etapy</span>
+  <ul>
+    <li><strong>Model zmyśla szczegóły, które brzmią wiarygodnie.</strong> Cena biletu, godzina otwarcia, współrzędne punktu na mapie. Jedna taka pomyłka (np. lot, który odlatuje, zanim zdążysz dojechać) psuje cały plan, a nie widać jej na pierwszy rzut oka.</li>
+    <li><strong>Wszystko za chwilę się zmieni.</strong> Ceny, loty, zamknięte szlaki i restauracje. Dlatego każdą liczbę zapisujemy <strong>z datą</strong> i oznaczamy, ile jest warta.</li>
+    <li><strong>Kraj jest za duży, żeby badać wszystko dokładnie.</strong> Argentyna ma około 3 700 km długości. Gdybyśmy od razu badali każde miejsce „na głębokość”, zużylibyśmy limit na rzeczy, których i tak nie wybierzesz.</li>
+    <li><strong>Najważniejsze decyzje są Twoje.</strong> Ile ryzyka, ile komfortu, czy wolisz góry, czy miasta. Claude może je przedstawić, ale nie powinien ich podejmować za Ciebie.</li>
+  </ul></div>
+
+  <h3>Do czego służy każdy etap</h3>
+  <div class="tabela-wrap"><table>
+    <tr><th>Etap</th><th>Co robi</th><th>Dlaczego osobno</th></tr>
+    <tr><td><strong>A0</strong> założenia</td><td>pytania do Ciebie: termin, budżet, styl, bezpieczeństwo; krytyczna ocena, co się w tym wyklucza</td><td>bez założeń badamy wszystko. Marzec zmienia całą Argentynę (koniec sezonu w Patagonii, pora deszczowa na północy), a budżet 15 000 zł wyklucza wiele rzeczy. To trzeba wiedzieć <em>zanim</em> zaczną się wyszukiwania</td></tr>
+    <tr><td><strong>K1</strong> zwiad</td><td>po jednym podagencie na region i temat przekrojowy (bezpieczeństwo, logistyka). Wszyscy piszą raport <strong>według tego samego wzoru</strong></td><td>równolegle, więc szybko; ten sam wzór, więc raporty da się porównać; wynik trafia do plików, więc rozmowa nie pęcznieje. Zwiad ma być <strong>szeroki i płytki</strong></td></tr>
+    <tr><td><strong>K2</strong> analiza i wybór</td><td>Claude zestawia raporty, układa 2-3 warianty trasy z kosztem i ryzykiem, pokazuje ograniczenia. <strong>Ty wybierasz</strong></td><td>tu zapada decyzja o wartościach. Wynik K1 jest zbyt surowy, żeby od razu wybrać, a K3 jest zbyt drogie, żeby robić je dla trzech tras</td></tr>
+    <tr><td><strong>K3</strong> pogłębienie</td><td>podagenci tylko dla wybranej trasy: szlaki, rezerwacje, loty, noclegi z ocenami z kilku platform. <strong>Przeglądarka i strony oficjalne</strong></td><td>dopiero teraz warto płacić za dokładność. Strony oficjalne dają to, czego nie ma w wyszukiwarce (cenniki, rozkłady, zasady parków)</td></tr>
+    <tr><td><strong>K4</strong> bramki</td><td>kontrola 1: skrypt (dni tygodnia, sumy, współrzędne). Kontrola 2: osobny agent, który nie zna rozmowy i sprawdza twierdzenia ze źródłami</td><td>autor własnej pracy widzi to, co chciał napisać. Drugi, „czysty” agent widzi to, co faktycznie jest w źródle</td></tr>
+  </table></div>
+
+  <div class="ramka dlaczego"><span class="nag">Zasada, którą warto zapamiętać</span>Tam, gdzie odpowiedź jest jedna i da się ją policzyć (dzień tygodnia dla daty, suma w budżecie, współrzędne w obrębie kraju), sprawdza <strong>skrypt</strong>. Tam, gdzie trzeba zrozumieć sens (czy cena z blogu dotyczy cudzoziemców, czy ocena dotyczy tego samego hotelu), sprawdza <strong>drugi model</strong> o czystej głowie. Tam, gdzie trzeba zobaczyć, jak to wygląda (mapa, strona), patrzy <strong>Claude przez przeglądarkę</strong>, a na końcu Ty. Poniżej wyjaśniam każdą z tych trzech kontroli.</div>
+
+  <h3>Kod czy model: kto co sprawdza i dlaczego</h3>
+  <p>Kontrola nie jest jedną czynnością. To trzy różne rodzaje pytań, a każdy ma innego najlepszego sprawdzającego. Pomyłka w wyborze jest groźniejsza niż brak kontroli, bo daje <strong>fałszywe poczucie pewności</strong>.</p>
+
+  <h4>1. Pytania „z jedną odpowiedzią”: sprawdza skrypt</h4>
+  <p>Przykłady: <em>Czy 7 marca 2027 to niedziela? Ile wynosi suma tych dwunastu pozycji? Czy ta współrzędna leży w Argentynie? Czy dzień zamknięcia muzeum przypada na dzień, w którym je zaplanowaliśmy?</em> Odpowiedź jest tylko jedna i da się ją policzyć. Skrypt ma tu trzy zalety:</p>
+  <ul>
+    <li><strong>Ten sam wynik za każdym razem.</strong> Model może raz policzyć dobrze, a raz źle i nie ostrzeże, że się pomylił. Modele bywają zaskakująco słabe w kalendarzu i arytmetyce, a pomyłka brzmi tak samo pewnie jak poprawna odpowiedź.</li>
+    <li><strong>Nie da się go przekonać.</strong> Skrypt nie „uwierzy”, że suma na pewno jest dobra. Sprawdza i pokazuje różnicę.</li>
+    <li><strong>Nic nie kosztuje</strong> (limit) i jest błyskawiczny, więc może sprawdzić wszystko, nie tylko próbkę.</li>
+  </ul>
+
+  <h4>2. Pytania o sens: sprawdza drugi model</h4>
+  <p>Przykłady: <em>Czy 50 000 pesos to cena dla cudzoziemca, czy stawka ogólna? Czy ocena 9,3 dotyczy tego hotelu w Palermo, a nie innego o podobnej nazwie? Czy plan nie bagatelizuje ostrzeżenia z raportu o bezpieczeństwie? Czy cena dotyczy jednej nocy, czy dwóch?</em> Skrypt nie sprawdzi tego, bo trzeba <strong>zrozumieć zdanie</strong>. Tu potrzebny jest model, ale nie ten, który napisał plan.</p>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego „o czystej głowie”</span>
+    <ul>
+      <li><strong>Autor widzi to, co chciał napisać.</strong> Tak jak człowiek przeczyta własny tekst i nie zauważy literówki, model przeczyta własny plan i uzna go za dobry. Pytanie „sprawdź, czy wszystko jest dobrze” w tej samej rozmowie zwykle kończy się odpowiedzią „tak”.</li>
+      <li><strong>Czysta głowa to nowa instancja, która nie zna rozmowy.</strong> Dostaje tylko plan i pliki źródłowe, więc nie wie, jaki wynik byłby „oczekiwany”, i nie ma jak przytaknąć.</li>
+      <li><strong>Krótkie zadanie.</strong> Jedno twierdzenie i jedno źródło naraz. Im mniej do przeczytania, tym mniej do przeoczenia i tym taniej.</li>
+      <li><strong>Inny model ma inne słabe punkty</strong> niż ten, który budował plan, więc rzadziej mylą się w tym samym miejscu.</li>
+    </ul>
+  </div>
+
+  <h4>3. Pytania „jak to wygląda”: Claude patrzy przez przeglądarkę</h4>
+  <p>Są rzeczy, których nie złapie ani skrypt, ani sprawdzenie tekstu. W tej budowie mapa pokazywała kafelki z napisem „Access blocked”, a potem „API key required”. Dla przeglądarki to były poprawnie załadowane obrazki, więc prosty test „czy kafelki się wczytały” przechodził. Wyłapał to dopiero <strong>zrzut ekranu</strong>, na którym było widać napis zamiast mapy. Schemat na tej stronie też „działał”, dopóki ktoś nie otworzył jej w ciemnym motywie. Dlatego w kroku B6 <strong>Claude sam otwiera stronę w przeglądarce (rozszerzenie Claude in Chrome), robi zrzuty ekranu i ocenia, jak wygląda wynik</strong>, a nie tylko liczy błędy w konsoli. Claude widzi obraz i potrafi ocenić czytelność, kolory i układ. Ty oglądasz stronę na końcu, bo tylko Ty wiesz, czy odpowiada Twoim oczekiwaniom.</p>
+
+  <h4>Kolejność: najpierw tani filtr, potem drogi</h4>
+  <p>Kontrole ustawiamy jak lejek. <strong>Skrypt</strong> przechodzi po wszystkim i usuwa to, co proste. <strong>Model</strong> dostaje tylko to, co skrypt przepuścił, i sprawdza sens. <strong>Człowiek</strong> patrzy na koniec i decyduje o rzeczach, które są wyborem (np. czy akceptujesz wyjątek od standardu noclegów).</p>
+
+  <h4>Jak to wyglądało w tej podróży</h4>
+  <div class="tabela-wrap"><table>
+    <tr><th>Pytanie</th><th>Kto sprawdzał</th><th>Co wyszło</th></tr>
+    <tr><td>Czy etykiety dni tygodnia dla 7-22 marca są poprawne?</td><td>skrypt</td><td>16 z 16 poprawnych</td></tr>
+    <tr><td>Czy sumy budżetu się zgadzają?</td><td>skrypt (przeliczenie)</td><td>zgodne, a różnica 4-5 zł wynikała z kursu pesos (1 535 zamiast 1 525 za dolara) i została opisana w changelogu zamiast ukryta</td></tr>
+    <tr><td>Czy współrzędne 56 znaczników są takie same jak w pliku miejsc?</td><td>skrypt</td><td>zgodne, a trzy miejsca bez wyniku nie dostały pinu</td></tr>
+    <tr><td>Czy lot o 10:20 da się złapać po porannym autobusie z El Chaltén?</td><td>w tej budowie: agent składający plan, bo takiej reguły w skrypcie nie było</td><td>konflikt znaleziony i trasa zmieniona. <strong>W skillu dopisujemy to jako regułę skryptu</strong> (godzina lotu a czas dojazdu), żeby nie zależeć od przypadku</td></tr>
+    <tr><td>Czy zakres ceny lotu w opisie dnia zgadza się z raportem?</td><td>drugi model</td><td>opis podawał 233-696 zł, a raport miał ceny do 349 USD. Poprawione</td></tr>
+    <tr><td>Czy godziny muzeum zgadzają się ze źródłem?</td><td>drugi model</td><td>błędne godziny jednego muzeum, poprawione</td></tr>
+    <tr><td>Czy „kolumna General” w cenniku to stawka dla cudzoziemców?</td><td>drugi model (nie da się policzyć)</td><td>źródło tego nie mówi, więc na stronie jest „zakładamy, do potwierdzenia”</td></tr>
+    <tr><td>Czy mapa naprawdę pokazuje mapę?</td><td>Claude przez przeglądarkę (zrzut ekranu), potem Ty</td><td>kafelki z komunikatem o blokadzie i o kluczu API zostały wymienione na działające</td></tr>
+  </table></div>
+
+  <h4>Cztery typowe błędy w kontrolach</h4>
+  <ul>
+    <li><strong>Kontrola, która przepuszcza wszystko.</strong> Np. skrypt sprawdza tylko, czy w polu „cena” jest jakaś liczba. Dlatego robimy <strong>test pułapek</strong> (A6b): podrzucamy znany błąd i patrzymy, czy kontrola go złapie.</li>
+    <li><strong>Pytanie modelu o rachunki.</strong> „Czy ta suma się zgadza?” dostanie pewną odpowiedź, która może być błędna. Rachunki liczy skrypt.</li>
+    <li><strong>Ten sam model w tej samej rozmowie jako sprawdzający</strong>, bo zna oczekiwany wynik i będzie do niego zmierzał.</li>
+    <li><strong>Łagodzenie kontroli zamiast poprawiania danych.</strong> Gdy kontrola zgłasza błąd, poprawiamy plan albo źródło. Nigdy nie poluzowujemy skryptu po to, żeby błąd przeszedł. Prompty w tej instrukcji mówią to wprost.</li>
+  </ul>
+
+  <h4>Prosty sposób wyboru</h4>
+  <div class="tabela-wrap"><table>
+    <tr><th>Zadaj sobie pytanie</th><th>Jeśli „tak”</th></tr>
+    <tr><td>Czy istnieje jedna poprawna odpowiedź, którą da się policzyć lub porównać znak po znaku?</td><td>skrypt</td></tr>
+    <tr><td>Czy trzeba zrozumieć zdanie, kontekst lub to, do czego odnosi się liczba?</td><td>drugi model o czystej głowie</td></tr>
+    <tr><td>Czy trzeba zobaczyć wygląd lub zachowanie (strona, mapa, kliknięcie)?</td><td>Claude przez przeglądarkę: otwiera stronę, robi zrzut ekranu i ocenia wygląd; na końcu patrzysz Ty</td></tr>
+    <tr><td>Czy to wybór według Twoich wartości (ryzyko, komfort, budżet)?</td><td>Ty. Claude przedstawia warianty, ale nie wybiera</td></tr>
+  </table></div>
+
+  <div class="ramka dlaczego"><span class="nag">To samo w analizie spółek</span>W ćwiczeniu o pakiecie analitycznym spółki działa dokładnie ta sama zasada. <strong>Bramka 1</strong> to skrypt sprawdzający, czy cytat naprawdę stoi na podanej stronie raportu (jedna poprawna odpowiedź). <strong>Bramka 2</strong> to osobny model, który ocenia, czy z cytatu wynika to, co zapisano: właściwy rok, jednostka, cała spółka czy segment (sens). W podróży zamiast „cytatu ze strony raportu” jest „wartość w pliku źródłowym”, ale schemat jest ten sam: najpierw tani, mechaniczny filtr, potem drugi, niezależny model do tego, co wymaga zrozumienia.</div>
+
+  <h3>Po co to wszystko i co się przy okazji wykryło</h3>
+  <p>Etapy robimy po to, żeby błąd wychodził tam, gdzie jest tani w naprawie: w pliku tekstowym, a nie na lotnisku. Poniżej błędy z pierwszego przebiegu, ułożone według kroku, w którym wyszły. Pokazują też, że nie wszystko łapie od razu to, co powinno.</p>
+
+  <h4>Zwiad (K1)</h4>
+  <p>Wyszukiwarka zwracała głównie fragmenty stron i serwisy wtórne, a wiele stron oficjalnych odpowiadało błędem 403. Raporty były więc nierówne, ale <strong>same to zaznaczały</strong>: fakty z jednego źródła dostały znacznik „niepotwierdzone”. Dzięki temu było wiadomo, co poprawiać dalej, a nie udawać pewność.</p>
+
+  <h4>Analiza i wybór trasy (K2)</h4>
+  <p>Zestawienie raportów pokazało ograniczenia, których żaden pojedynczy raport nie widział. Trzeba było dopytać, czy „dwa tygodnie” liczą się z podróżą (z lotem z Europy to realnie około 12 dni na miejscu). Kalendarz (festiwal winobrania na początku marca, Wielkanoc pod koniec) zawęził okno dat. Trekking i noclegi minimum 4 gwiazdki częściowo się wykluczały, więc trzeba było zdecydować o wyjątku.</p>
+
+  <h4>Pogłębienie trasy (K3)</h4>
+  <p>Tu wyszło najwięcej konkretów. Przeglądarka i strony oficjalne poprawiły część informacji ze zwiadu: zasada rejestracji na szlaku „48 godzin wcześniej” okazała się jednym źródłem z 2024 roku, którego oficjalne strony nie podają. W jednej miejscowości w ogóle nie było hoteli 4 gwiazdki. Znalazł się też bezpośredni lot, którego zwiad nie sprawdził. Jeden agent pominął przeglądarkę i trzeba było powtórzyć jego pracę. Kulinaria zawierały lokale, które okazały się zamknięte, i oceny z agregatora zamiast z map. Zamknięte usunęliśmy, a o źródle ocen przewodnik uczciwie mówi.</p>
+
+  <h4>Współrzędne i składanie planu</h4>
+  <p>Geokodowanie nie znalazło trzech miejsc i dla jednej atrakcji zwróciło środek całego lodowca, 20 km od miejsca, które się zwiedza. Te punkty nie dostały pinu albo dostały oznaczenie „przybliżone”, zamiast pinu „na oko”. Przy układaniu dni wyszedł <strong>konflikt lotu z autobusem</strong>: jedyny lot Calafate-Bariloche tego dnia odlatywał o 10:20, a plan zakładał poranny autobus z El Chaltén. Trasę zmieniono, dodając nocleg w Calafate dzień wcześniej. Gdy zebrano budżet w tabelę z danych, wyszedł wyższy niż wstępny szacunek „z głowy” przy droższym hotelu w stolicy (około 16,3-16,7 tys. zł zamiast 15,4-16 tys.). Wyszło też, że ceny noclegów w Bariloche dotyczyły innych dat (18-23 marca) niż ostateczny plan (15-20 marca), więc strona wyraźnie o tym mówi.</p>
+
+  <h4>Budowa strony i test w przeglądarce (część B)</h4>
+  <p>Pierwszy błąd mapy (podkład OpenStreetMap blokujący strony otwierane z pliku) zauważył <strong>człowiek na własnym ekranie</strong>: testy agenta przez lokalny serwer go nie pokazały, bo tak OpenStreetMap działa. Zamiennik (CARTO) też zawiódł: zaczął wymagać klucza API i zalewał mapę znakiem wodnym. Zauważył to człowiek, a niezależnie od niego także agent weryfikujący. To dobra lekcja: testuj tak, jak użytkownik otworzy stronę, i patrz na efekt, a nie tylko na brak błędów w konsoli. Przy przeliczaniu walut okazało się, że peso jest w tabeli B kursów NBP (tygodniowej, zaokrąglonej), co zmieniło sumy budżetu o kilka złotych. Różnicę opisano zamiast ukryć.</p>
+
+  <h4>Niezależna weryfikacja końcowa</h4>
+  <p>Osobny agent o czystej głowie znalazł błędy, których autorzy już nie widzieli: zakres ceny lotu w opisie jednego dnia niezgodny z raportem, błędne godziny otwarcia jednego muzeum, brakującą adnotację, że „kolumna General” w cenniku może nie oznaczać stawki dla cudzoziemców, i niepotwierdzony adres. Wszystko to było drobne, ale w planie, według którego się podróżuje, drobne rzeczy są najdroższe.</p>
+
+  <h3>Słowniczek</h3>
+  <div class="tabela-wrap"><table>
+    <tr><th>Pojęcie</th><th>Co to znaczy</th></tr>
+    <tr><td>Podagent</td><td>osobna instancja Claude uruchomiona do jednego zadania. Nie zna Twojej rozmowy, dostaje tylko polecenie i zapisuje wynik do pliku</td></tr>
+    <tr><td>Bramka</td><td>kontrola, której wynik decyduje, czy wolno iść dalej</td></tr>
+    <tr><td>Oznaczenie wiarygodności</td><td>przy każdym fakcie: <em>zweryfikowane</em> (oficjalne źródło), <em>niepotwierdzone</em> (jedno źródło lub wtórne) albo <em>nieznane</em> (nie znaleziono)</td></tr>
+    <tr><td>Geokodowanie</td><td>zamiana nazwy miejsca na współrzędne przez bazę map (u nas OpenStreetMap). To odpowiedź bazy, a nie zgadywanie modelu</td></tr>
+    <tr><td>Skill</td><td>przepis dla Claude Code: plik <code>SKILL.md</code> z opisem kroków i folder ze skryptami. Wywołujesz go poleceniem <code>/nazwa-skilla</code></td></tr>
+    <tr><td>CLAUDE.md</td><td>regulamin projektu, który Claude czyta na początku każdej rozmowy w folderze</td></tr>
+  </table></div>
+</section>
+
+<section class="czesc" id="czesc-a"><div class="wrap"><span class="etykieta">CZĘŚĆ A</span><h2>Wyszukiwanie i plan podróży</h2><p class="male" style="margin:6px 0 0">Wynik: plik <code>trasa.json</code>, plan dzień po dniu i lista rzeczy do sprawdzenia. Część B z niego korzysta, ale część A działa sama.</p></div></section>
+
+<section id="a0">
+  <h2>A0. Założenia: wywiad z Claude</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego</span><p>Claude zadaje pytania, zanim cokolwiek znajdzie w sieci. To oszczędza najwięcej: wyszukiwanie „na ślepo” kończy się raportami o miejscach, których nie wybierzesz.</p><p>Drugi cel to <strong>napięcia</strong>: Claude ma wskazać, co się w Twoich odpowiedziach wyklucza (np. budżet i standard noclegów, styl podróży i pora roku). Prosimy o krytyczne podejście, bo uprzejmy model chętnie potwierdzi wszystko.</p></div>
+  <div class="prompt"><div class="pasek"><span>A0. Wywiad i założenia</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Planuję podróż. Zanim cokolwiek wyszukasz w sieci, ustal ze mną założenia. Niczego jeszcze nie szukaj. Wartości z bloku ZMIENNE na końcu tego prompta traktuj jako ustalone.
+
+1. Zadaj mi pytania tylko o te pola ze ZMIENNYCH, które zostawiłem puste. Zadaj je w jednej wiadomości, krótko i z propozycjami odpowiedzi do wyboru. Jeśli wszystkie pola są wypełnione, pomiń pytania i przejdź do punktu 2.
+2. Napisz krytycznie, jakie napięcia widzisz w moich założeniach: co się wyklucza lub jest ryzykowne (budżet kontra standard, styl kontra pora roku, liczba dni kontra odległości, jedna osoba kontra wynajem auta). Wskaż, co trzeba będzie sprawdzić w pierwszej kolejności.
+3. Zapisz ustalenia w pliku zalozenia.md, a zasady pracy w CLAUDE.md:
+   - każda informacja o miejscach, cenach i terminach ma źródło (adres) i datę sprawdzenia,
+   - oznaczamy wiarygodność: zweryfikowane, niepotwierdzone, nieznane,
+   - niczego nie zgadujemy: gdy czegoś nie znajdziesz, piszesz "nieznane",
+   - współrzędne tylko z geokodowania, nigdy z pamięci,
+   - bezpieczeństwo jest kryterium wyboru, nie dodatkiem,
+   - teksty dla mnie po polsku, źródła szukamy po angielsku i w języku kraju.
+
+ZMIENNE (wypełnij, niepotrzebne zostaw puste):
+KRAJ lub REGION:
+TERMIN (miesiąc, sztywne daty lub okno):
+LICZBA DNI NA MIEJSCU (bez dni w podróży):
+WYLOT Z:
+OSOBY (liczba i skład):
+BUDŻET (bez lotu międzynarodowego):
+MINIMALNY STANDARD NOCLEGÓW:
+STYL PODRÓŻY (dwa najważniejsze):
+WYNAJEM AUTA (tak, nie, tylko na odcinkach):
+CZEGO UNIKAĆ:
+OBOWIĄZKOWE:
+BEZPIECZEŃSTWO (najważniejsze kryterium lub jedno z kryteriów):
+FORMAT WYNIKU (np. strona HTML z mapą):</pre></div>
+  <div class="ramka sprawdz"><span class="nag">Sprawdź</span>W folderze są pliki <code>zalozenia.md</code> i <code>CLAUDE.md</code>. Przeczytaj <code>zalozenia.md</code> i popraw to, co się nie zgadza. To jedyny plik, który w całości zależy od Ciebie.</div>
+</section>
+
+<section id="a1">
+  <h2>A1. Plan badań (jeszcze bez szukania)</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego</span><p>Plan powstaje przed wyszukiwaniem i ma wskazać też <strong>ryzyka samego planu</strong>. W budowie wzorcowej krytyka planu pokazała m.in., że marzec zmienia wszystko, że logistyka jest ważniejsza niż atrakcje i że dane szybko się starzeją.</p></div>
+  <div class="prompt"><div class="pasek"><span>A1. Plan badań</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Na podstawie zalozenia.md przygotuj plan wyszukiwania informacji w trzech warstwach: (1) ogólne kierunki, (2) analiza i doprecyzowanie, (3) szczegóły dla wybranej trasy. Niczego jeszcze nie wyszukuj.
+
+Plan ma zawierać:
+- listę regionów do zbadania z priorytetem (wysoki, średni, niski) i uzasadnieniem w jednym zdaniu,
+- tematy przekrojowe, które badamy osobno: bezpieczeństwo (komunikaty urzędów, przestępczość, zdrowie, ubezpieczenie, drogi, góry, pieniądze, wjazd) i logistyka (loty, autobusy, auto, odległości, kalendarz świąt i sezonów w moim terminie, realistyczny koszt),
+- wzór raportu, który dostanie każdy podagent (8 sekcji: opis regionu, top miejsca z czasem i trudnością, specyfika mojego miesiąca, dojazd, rezerwacje z wyprzedzeniem, bezpieczeństwo, orientacyjny koszt dnia, źródła z datami),
+- zasady jakości źródeł,
+- trzy największe ryzyka tego planu i jak je ograniczymy.
+Bądź krytyczny: wskaż, czego w moich założeniach nie da się zrealizować. Zapisz wynik w pliku plan-badan.md.</pre></div>
+  <div class="ramka sprawdz"><span class="nag">Sprawdź</span>W <code>plan-badan.md</code> jest lista regionów z priorytetami i wzór raportu. Skreśl regiony, których na pewno nie chcesz, zanim zaczniesz kolejny krok: każdy region to osobny podagent i osobny koszt.</div>
+</section>
+
+<section id="a2">
+  <h2>A2. Zwiad w regionach (K1)</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego</span><ul>
+    <li><strong>Jeden podagent na region</strong>, wszyscy równolegle. Każdy zaczyna z czystą głową i nie myli się z innymi regionami.</li>
+    <li><strong>Ten sam wzór raportu</strong>, żeby potem zestawić regiony w jednej tabeli.</li>
+    <li><strong>Zapis do plików i tylko skrót do rozmowy.</strong> Osiem raportów po 1 500 słów zalałoby rozmowę i pogorszyło jakość dalszej pracy.</li>
+    <li><strong>Szeroko i płytko.</strong> Zwiad nie ma dawać ostatecznych cen. Ma pokazać, czy region w ogóle się mieści.</li>
+  </ul></div>
+  <div class="prompt"><div class="pasek"><span>A2. Zwiad regionów</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Uruchom równolegle po jednym podagencie na każdy region i temat przekrojowy z pliku plan-badan.md. Każdy podagent dostaje: moje założenia z zalozenia.md, nazwę swojego regionu lub tematu i poniższy wzór. Wynik zapisuje do pliku k1/nazwa.md, a do mnie zwraca tylko podsumowanie w 10 liniach i ścieżkę pliku.
+
+Wzór raportu:
+1. Opis regionu w 3 zdaniach i dla kogo jest.
+2. Top 5-8 miejsc lub aktywności: nazwa, minimalny czas, trudność, orientacyjny koszt, ocena przydatności dla mojej sytuacji (1-5).
+3. Specyfika mojego miesiąca: pogoda, koniec lub początek sezonu, zamknięcia, tłumy, ryzyka (zdrowotne, pogodowe).
+4. Dojazd: opcje i czasy z głównego lotniska kraju i z najbliższego lotniska.
+5. Rezerwacje z wyprzedzeniem: co i kiedy.
+6. Bezpieczeństwo regionu: konkretne zagrożenia, szlaki i miejsca, których unikać, zasady dla osoby podróżującej samotnie, zasięg i ratownictwo.
+7. Orientacyjny koszt dnia przy moim standardzie noclegów.
+8. Źródła: adres i data publikacji lub dostępu przy KAŻDYM twierdzeniu. Twierdzenia z jednego źródła oznacz NIEPOTWIERDZONE. Przy cenach podaj datę.
+
+Zasady dla podagentów:
+- szukaj po angielsku i w języku kraju, korzystaj ze źródeł oficjalnych (parki, urzędy turystyczne, lokalna prasa), nie opieraj się na samych blogach,
+- niczego nie zgaduj: gdy nie znajdziesz, napisz "nieznane",
+- nie rekomenduj jeszcze konkretnych hoteli,
+- maksymalnie ok. 1500 słów.
+
+Dla tematu "bezpieczeństwo" użyj innego układu: komunikaty urzędów (mój kraj, Wielka Brytania, USA) z datami, przestępczość i oszustwa, strajki i blokady, zdrowie i szczepienia, ubezpieczenie z ewakuacją, drogi, góry, pieniądze (kurs oficjalny i nieoficjalny, ich różnica), zasady wjazdu.
+Dla tematu "logistyka": loty międzynarodowe i krajowe z zakresem cen, autobusy, auto (zasady dla cudzoziemca), tabela odległości między głównymi bazami, kalendarz świąt i długich weekendów w moim terminie, test realności budżetu.</pre></div>
+  <div class="ramka uwaga"><span class="nag">Uwaga</span>Wyniki K1 będą <strong>nierówne</strong>: część stron oficjalnych nie otworzy się i agent oprze się na streszczeniach. To oczekiwane. Najważniejsze, żeby raport sam o tym napisał (znacznik „niepotwierdzone”), a nie udawał pewność. Braki uzupełnimy w K3.</div>
+  <div class="ramka sprawdz"><span class="nag">Sprawdź</span>W folderze <code>k1</code> są raporty. Otwórz dwa i znajdź w nich zdanie oznaczone „niepotwierdzone” z adresem źródła. Jeśli wszystko jest „zweryfikowane”, a źródeł mało, raport udaje pewność: poproś Claude o poprawkę.</div>
+</section>
+
+<section id="a3">
+  <h2>A3. Analiza i wybór trasy (K2)</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego</span><p>Tu pracujesz Ty razem z Claude. Claude przedstawia <strong>warianty</strong>, a nie jedną odpowiedź. Każdy wariant ma ocenę ryzyka obok kosztu i czasu, bo bezpieczeństwo ma być kryterium wyboru. Claude kończy listą <strong>decyzji, które są Twoje</strong>.</p><p>W budowie wzorcowej ten etap ujawnił, że dwa tygodnie z lotem z Europy to realnie 12 dni na miejscu, że kalendarz świąt (Vendimia na początku marca, Wielkanoc pod koniec) zawęża okno do około dwóch tygodni, a trekking i noclegi 4 gwiazdki częściowo się wykluczają.</p></div>
+  <div class="prompt"><div class="pasek"><span>A3. Analiza i warianty</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Przeczytaj wszystkie raporty z folderu k1 i zalozenia.md. Przygotuj analizę, a decyzji nie podejmuj za mnie.
+
+1. Wypisz ograniczenia z raportów: okno dat (święta, sezony, zamknięcia), budżet (co się mieści, co nie), bezpieczeństwo (największe ryzyka), logistyka (odległości, loty).
+2. Zaproponuj 2-3 warianty trasy dla moich dni na miejscu. Każdy wariant: regiony i liczba nocy, główne atrakcje, ocena ryzyka (niskie, średnie, wysokie) z uzasadnieniem, koszt jako zakres (osobno pozycje ze źródeł i założenia), największy minus.
+3. Wskaż krytycznie, które moje założenia się wzajemnie wykluczają i co mi proponujesz poluzować.
+4. Podaj swoją rekomendację z uzasadnieniem, ale zaznacz, że wybór należy do mnie.
+5. Zakończ listą decyzji, które muszę podjąć (np. wyjątek od standardu noclegów w jednym miejscu, wybór terminu) i pytaniami, na które potrzebujesz odpowiedzi.
+Zapisz w pliku k2-analiza.md i pokaż mi skrót.</pre></div>
+  <div class="ramka sprawdz"><span class="nag">Sprawdź</span>Każdy wariant ma koszt jako <strong>zakres</strong> z rozróżnieniem „ze źródeł” i „założenie”. Jeśli widzisz jedną pewną liczbę bez zastrzeżeń, poproś o poprawkę. Potem odpowiedz Claude na pytania z końca i wybierz wariant.</div>
+</section>
+
+<section id="a4">
+  <h2>A4. Pogłębienie wybranej trasy (K3)</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego</span><ul>
+    <li>Dopiero teraz płacimy za dokładność, i to <strong>tylko dla wybranej trasy</strong>.</li>
+    <li><strong>Przeglądarka i strony oficjalne.</strong> W K1 wyszukiwarka dawała głównie fragmenty. Ceny wstępu, rozkłady i zasady rejestracji na szlakach są na stronach parków i linii lotniczych.</li>
+    <li><strong>Noclegi z ocenami według zasad</strong>, żeby średnia z jednej platformy nie wprowadzała w błąd (patrz ramka niżej).</li>
+    <li><strong>Lot lub rezerwacja, którą nie da się ominąć, jest pierwsza</strong>, a daty układamy wokół niej.</li>
+  </ul></div>
+  <div class="prompt"><div class="pasek"><span>A4. Pogłębienie trasy</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Wybieram wariant trasy i przyjmuję decyzje podane w bloku ZMIENNE na końcu tego prompta.
+
+Uruchom po jednym podagencie na każdy odcinek wybranej trasy oraz jednego od lotów i transportu między odcinkami. Każdy zapisuje wynik do k3/nazwa.md (po angielsku) i zwraca mi 12 linii podsumowania.
+
+Jak pracują: korzystają z przeglądarki Chrome (skill chrome-browser, narzędzia ładowane jednym wywołaniem). Każdy otwiera WŁASNĄ kartę i nigdy nie używa kart innych podagentów. Nie wolno im się logować, wpisywać danych osobowych, rezerwować ani płacić. Gdy strona zawodzi 2-3 razy, idą dalej i zapisują to w raporcie. Uruchamiaj naraz tylu podagentów, ile podałem w ZMIENNYCH (MAKSYMALNIE PODAGENTÓW NARAZ).
+
+Zakres każdego odcinka: oficjalne zasady i opłaty (parki, rejestracja na szlakach, przewodnik obowiązkowy czy nie), szlaki i atrakcje (długość, przewyższenie, czas, trudność, zasięg i ratownictwo), transport (rozkłady, ceny, czasy), plan dnia po dniu z alternatywą na złą pogodę, bezpieczeństwo dla osoby podróżującej samotnie (lub dla mojej grupy, zgodnie z zalozenia.md).
+
+NOCLEGI, zasady oceny:
+- standard minimum zgodnie z zalozenia.md; jeśli w miejscowości nie ma takiego standardu, podaj najlepsze bliskie alternatywy i oznacz je wyraźnie jako poniżej standardu,
+- 3-4 opcje na bazę: nazwa, kategoria, cena za noc dla moich dat (podaj serwis i daty wyszukiwania), ocena i LICZBA opinii z co najmniej dwóch platform, świeżość opinii (ostatnie 12 miesięcy), 2-3 krótkie cytaty z opinii o bezpieczeństwie, czystości i lokalizacji, odległość do centrum lub szlaków, czy dojście w nocy jest bezpieczne,
+- odrzucaj obiekty z mniej niż 50 opiniami,
+- współrzędne tylko jeśli odczytane ze strony mapy, w przeciwnym razie "nieznane".
+
+LOTY I TRANSPORT: sprawdź rozkłady i ceny dla moich dat w publicznych wynikach wyszukiwania, podaj godziny odlotów (to one ustalają dni trasy), zasady bagażu, wykonaj budżet całej trasy z podziałem na pozycje ze źródeł i założenia, z kursem waluty i jego datą.
+
+Każdy fakt: adres źródła i data. Brak potwierdzenia: NIEPOTWIERDZONE lub nieznane. Niczego nie wymyślaj.
+
+ZMIENNE (wypełnij, niepotrzebne zostaw puste):
+WARIANT TRASY (nazwa lub numer z pliku k2-analiza.md):
+DECYZJE I WYJĄTKI (np. wyjątek od standardu noclegów w miejscowości X):
+DATY (sztywne lub okno):
+MAKSYMALNIE PODAGENTÓW NARAZ (domyślnie 4):</pre></div>
+  <div class="ramka uwaga"><span class="nag">Uwaga</span>Jeśli jeden agent nie użył przeglądarki albo nie spełnił zasad, <strong>uruchom go jeszcze raz</strong> z wyraźnym wymogiem. W budowie wzorcowej agent od stolicy za pierwszym razem pominął przeglądarkę i musiał powtórzyć pracę.</div>
+  <div class="ramka sprawdz"><span class="nag">Sprawdź</span>Każdy hotel ma dwie oceny z liczbą opinii i cenę z podanymi datami. Wybierz jeden hotel i sprawdź go sam na stronie rezerwacyjnej dla tych samych dat.</div>
+</section>
+
+<section id="a5">
+  <h2>A5. Kulinaria: lokalne przysmaki i miejsca</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego</span>To osobna warstwa na gotowej trasie: co warto zjeść w każdym miejscu i gdzie. Osobny podagent pozwala pilnować jakości (oceny, godziny, czy lokal jeszcze działa), a nie dopisywać „polecajki” z pamięci modelu. W budowie wzorcowej oceny pochodziły z agregatora zamiast z map, a część lokali okazała się zamknięta. Dlatego poniższy prompt wymaga źródeł bezpośrednich i sprawdzenia, czy lokal działa.</div>
+  <div class="prompt"><div class="pasek"><span>A5. Kulinaria</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Dla każdej bazy z wybranej trasy przygotuj warstwę kulinarną. Uruchom jednego podagenta; może korzystać z przeglądarki (własna karta, bez logowania i płacenia).
+
+Dla każdego miejsca:
+1. 6-10 lokalnych dań i produktów: nazwa w języku kraju, krótki opis, co jest regionalne, orientacyjna cena (z datą lub "nieznana"), dostępność w moim miesiącu (np. sezon owoców). Tylko to, co naprawdę regionalne lub charakterystyczne i da się zweryfikować.
+2. 3-4 polecane lokale: nazwa, co zamówić, poziom cen, ocena i liczba opinii z Map Google i Tripadvisor (z samych stron, nie z agregatorów), data lub świeżość ostatnich opinii, dostępność dla osoby jedzącej samotnie, bezpieczeństwo dojścia wieczorem, godziny otwarcia. SPRAWDŹ, CZY LOKAL DZIAŁA (oznaczenia zamknięty tymczasowo lub na stałe): takie wyrzucaj. Odrzucaj lokale z mniej niż 100 opiniami, chyba że są wyjątkowe. Współrzędne tylko ze strony mapy.
+3. Praktyczne informacje: napiwek, godziny posiłków, opłata za stół, bezpieczeństwo wody i lodu (osobno, jeśli są doniesienia o problemach), opcje wegetariańskie i bezglutenowe, co kupić na jedzenie na szlak.
+4. Lista 10 pozycji "koniecznie spróbuj" dla całej trasy.
+
+Wynik: kulinaria.md (czytelny) i kulinaria.json (tablica: miejsce, typ dania lub lokalu, nazwa, opis, cena, oceny z liczbą opinii i platformą, współrzędne lub null, źródła, data, wiarygodność). Brak danych: "nieznane". Niczego nie wymyślaj.</pre></div>
+  <div class="ramka sprawdz"><span class="nag">Sprawdź</span>W <code>kulinaria.md</code> nie ma lokali oznaczonych jako zamknięte, a przy ocenach jest liczba opinii i nazwa platformy. Jeśli ocen jest mało, to normalne: lepiej mniej niż niesprawdzone.</div>
+</section>
+
+<section id="a6">
+  <h2>A6. Weryfikacja i test pułapek</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego dwie kontrole</span>
+  <p><strong>Kontrola 1 (skrypt)</strong> odpowiada na pytania, które mają jedną poprawną odpowiedź: czy 7 marca 2027 to niedziela, czy noce się sumują, czy suma budżetu jest dobra, czy atrakcja nie ma dnia wolnego akurat wtedy, gdy ją zaplanowaliśmy, czy godzina lotu jest po przyjeździe autobusu. Skrypt daje za każdym razem ten sam wynik i nic nie kosztuje.</p>
+  <p><strong>Kontrola 2 (osobny agent)</strong> sprawdza sens: czy cena dotyczy cudzoziemców, czy ocena dotyczy właściwego hotelu, czy plan nie łagodzi ostrzeżeń z raportów. Nie widzi naszej rozmowy, więc ocenia plan tak, jak zrobiłby to ktoś z zewnątrz. Błędy faktograficzne poprawia, a zmiany planu <strong>proponuje Tobie</strong>.</p></div>
+  <div class="prompt"><div class="pasek"><span>A6. Dwie kontrole</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Zweryfikuj plan podróży dwiema niezależnymi kontrolami.
+
+Kontrola 1 (skrypt bez AI, narzedzia/sprawdz_plan.py, wynik w weryfikacja/kontrola1.md):
+- dzień tygodnia dla każdej daty w planie i zgodność z etykietami,
+- liczba nocy w każdym miejscu i suma,
+- przeliczenie wszystkich sum w budżecie (kurs waluty i jego data w pliku),
+- dni zamknięcia atrakcji względem dni, w których je zaplanowano,
+- czy godzina każdego lotu i dojazd do lotniska mieszczą się w planie dnia,
+- czy każda liczba w planie ma źródło i datę w plikach,
+- czy współrzędne każdego punktu leżą w kraju i w odpowiedniej miejscowości.
+
+Kontrola 2 (osobny podagent, który nie zna naszej rozmowy; dostaje tylko plan i pliki k1, k3, kulinaria):
+- prześledź co najmniej 40 twierdzeń (ceny, godziny, opłaty, oceny, odległości) do plików źródłowych i oceń: zgodne, inne, brak źródła, silniejsze niż źródło,
+- sprawdź, czy znaczniki "niepotwierdzone" nie zniknęły po drodze,
+- sprawdź, czy plan nie osłabia ostrzeżeń bezpieczeństwa z raportów i czy nie zaleca niczego ryzykownego dla osoby podróżującej samotnie,
+- ułóż wady według ważności: błąd faktu, brak zastrzeżenia, niespójność, kosmetyka.
+Wynik: weryfikacja/raport.md z werdyktem. Poprawiaj tylko błędy faktów (i wypisz każdą poprawkę); zmiany planu zaproponuj mi.</pre></div>
+  <h3>Test pułapek (opcjonalny, ale pouczający)</h3>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego</span>Kontrola, której nigdy nie widziałeś w działaniu, to tylko nadzieja. Podrzucamy więc trzy błędy do <strong>kopii</strong> planu i patrzymy, kto je złapie.</div>
+  <div class="prompt"><div class="pasek"><span>A6b. Test pułapek</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Sprawdźmy, czy kontrole naprawdę łapią błędy. Nie zmieniaj prawdziwego planu.
+1. Skopiuj plan do folderu TEST-PULAPEK.
+2. Podrzuć w kopii trzy błędy: (a) zmień etykietę dnia tygodnia przy jednej dacie, (b) zmień jedną cenę tak, żeby nie zgadzała się ze źródłem w pliku, (c) przesuń lot na godzinę wcześniejszą niż dojazd autobusem.
+3. Uruchom obie kontrole na kopii i pokaż, która kontrola złapała który błąd.
+Na końcu wyjaśnij w 3-4 zdaniach prostym językiem, dlaczego potrzebne są obie kontrole. Folder TEST-PULAPEK potem usuń.</pre></div>
+  <div class="ramka sprawdz"><span class="nag">Sprawdź</span>Kontrola 1 złapała (a) i (c), kontrola 2 (b) i ewentualnie (c). Jeśli któryś błąd przeszedł obie kontrole, poproś Claude o wzmocnienie kontroli (nie o złagodzenie).</div>
+</section>
+
+<section id="a7">
+  <h2>A7. Zapis trasy do jednego pliku</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego</span>To <strong>most między częścią A i B</strong>. Dotąd wyniki są w wielu plikach tekstowych. Jeden uporządkowany plik <code>trasa.json</code> sprawia, że strona z części B składa się mechanicznie, a część A kończy się wynikiem, który można sprawdzić. W budowie wzorcowej tego pliku nie było: stronę składał agent z dziesiątek notatek, co było wolniejsze i droższe.</div>
+  <div class="prompt"><div class="pasek"><span>A7. Zapis trasy</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Zbierz ostateczną trasę z plików k3, kulinaria i weryfikacja w jeden plik trasa.json (UTF-8). Struktura:
+- dni: lista, każdy dzień ma data, dzien_tygodnia, baza, plan (lista punktów z godzinami), transport (rodzaj, czas, cena), koszt, plan_b_pogoda, uwaga_bezpieczenstwo, rezerwacje, kulinaria_dnia,
+- miejsca: id, nazwa, kategoria (lotnisko, miasto, atrakcja, szlak, nocleg, dworzec), wspolrzedne lub null, pewnosc_pozycji,
+- noclegi: nazwa, baza, cena_za_noc z walutą i datami wyszukiwania, oceny z liczbą opinii i platformą, uwagi, status standardu,
+- ceny: każda cena to obiekt {kwota_od, kwota_do, waluta, data, zrodlo, wiarygodnosc},
+- budzet: pozycje z oznaczeniem "ze źródła" lub "założenie", sumy niska, środkowa, wysoka,
+- bezpieczenstwo, rezerwacje_i_dokumenty, do_zweryfikowania (lista, według ważności),
+- zrodla: adres, tytuł, data dostępu.
+Każda wartość zachowuje swoje oznaczenie wiarygodności. Niczego nie dopisuj od siebie. Na końcu uruchom kontrolę 1 z A6 na trasa.json i pokaż mi wynik.</pre></div>
+  <div class="ramka sprawdz"><span class="nag">Sprawdź</span>Otwórz <code>trasa.json</code> i znajdź jeden lot z godziną odlotu oraz jedną cenę z datą i źródłem. Część A jest gotowa: możesz zatrzymać się tutaj albo przejść do strony.</div>
+</section>
+
+<section class="czesc" id="czesc-b"><div class="wrap"><span class="etykieta">CZĘŚĆ B (dodatek)</span><h2>Strona z mapą, zdjęciami i przelicznikiem walut</h2><p class="male" style="margin:6px 0 0">Wejście: <code>trasa.json</code> z części A. Wynik: folder <code>strona</code> z plikiem <code>index.html</code>, który otwierasz w przeglądarce.</p></div></section>
+
+<section id="b1">
+  <h2>B1. Zdjęcia z wolną licencją</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego</span>Zdjęć z wyszukiwarki obrazów nie wolno wstawiać na stronę: prawie wszystkie są chronione prawem autorskim. <strong>Wikimedia Commons</strong> to baza zdjęć, w której każdy plik ma autora i licencję zapisane w danych. Licencje CC BY i CC BY-SA pozwalają użyć zdjęcia, jeśli podpiszesz autora i licencję, dlatego stopka pod zdjęciem jest obowiązkowa. Claude potrafi <strong>obejrzeć</strong> zdjęcia (czyta obrazy) i odrzucić te, które nie pokazują tego, co mają.</div>
+  <div class="prompt"><div class="pasek"><span>B1. Zdjęcia</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Pobierz zdjęcia na stronę przewodnika z Wikimedia Commons, z poprawnym podpisem autora i licencji. Nie korzystaj z wyszukiwarki obrazów ani z losowych stron. Wartości z bloku ZMIENNE na końcu tego prompta traktuj jako ustalone, a dla pustych pól użyj domyślnych.
+
+Źródło: tylko Commons (API https://commons.wikimedia.org/w/api.php). W nagłówku User-Agent podaj NAZWĘ PROJEKTU i KONTAKT ze ZMIENNYCH. Licencje: CC0, domena publiczna, CC BY, CC BY-SA. Odrzucaj: NC, ND, brak lub niejasną licencję, zdjęcia z widocznymi osobami jako głównym tematem, znaki wodne i logotypy.
+
+Tematy: główne atrakcje i szlaki z trasa.json, widoki miejscowości, charakterystyczne budowle w miastach, oraz dania i produkty z kulinaria.json. Po tyle zdjęć na temat, ile podano w ZMIENNYCH, najlepiej poziome, ostre, w sezonie podobnym do mojego terminu.
+
+Procedura: dla każdego tematu przeszukaj Commons, odczytaj z danych autora, licencję i adres strony pliku, pobierz miniaturę o podanej SZEROKOŚCI do folderu strona/img/ (nazwy małymi literami, bez polskich znaków), poczekaj co najmniej 1 s między pobraniami. OBEJRZYJ każde zdjęcie i usuń te, które nie pasują do tematu lub są słabej jakości.
+
+Zapisz manifest images.json: plik, temat, autor, licencja, adres licencji, adres strony pliku, wymiary, opis alternatywny po polsku (1 zdanie), gotowa stopka "Autor / licencja / Wikimedia Commons". Nigdy nie wymyślaj danych licencji: jeśli ich brakuje, pomiń plik. Wypisz tematy, dla których nie znalazłeś dobrego zdjęcia.
+
+ZMIENNE (wypełnij, niepotrzebne zostaw puste):
+NAZWA PROJEKTU (do nagłówka User-Agent, domyślnie przewodnik-podrozy):
+KONTAKT (opcjonalnie: adres e-mail lub strona):
+SZEROKOŚĆ ZDJĘĆ (domyślnie 1600 px):
+LICZBA ZDJĘĆ NA TEMAT (domyślnie 1-2):</pre></div>
+  <div class="ramka sprawdz"><span class="nag">Sprawdź</span>Otwórz 3 zdjęcia z folderu i porównaj z opisem w <code>images.json</code>. Otwórz adres strony pliku jednego z nich: autor i licencja muszą się zgadzać.</div>
+</section>
+
+<section id="b2">
+  <h2>B2. Współrzędne z geokodowania, nie z pamięci</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego</span>Modele często „znają” współrzędne, które są przesunięte o kilka kilometrów albo zupełnie błędne, a na mapie nie widać różnicy, dopóki nie pojedziesz w złe miejsce. Dlatego pytamy <strong>bazę map</strong> (OpenStreetMap, serwis Nominatim), a każdy wynik dostaje ocenę pewności. Wynik niepewny albo nieznaleziony zostaje bez pinu, zamiast pinu „na oko”.</div>
+  <div class="prompt"><div class="pasek"><span>B2. Współrzędne</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Wyznacz współrzędne wszystkich miejsc z trasa.json przez geokodowanie. NIGDY z pamięci modelu. Wartości z bloku ZMIENNE na końcu tego prompta traktuj jako ustalone.
+
+Metoda: OpenStreetMap Nominatim (https://nominatim.openstreetmap.org/search?format=jsonv2&amp;q=...&amp;limit=3&amp;addressdetails=1), w nagłówku User-Agent NAZWA PROJEKTU i KONTAKT ze ZMIENNYCH, najwyżej 1 zapytanie na sekundę. Dla każdego miejsca zapisz zapytanie, wybrany wynik (szerokość, długość, typ i numer obiektu w OSM, pełną nazwę) i pewność: wysoka (dokładna nazwa i właściwa miejscowość), średnia (ulica, dzielnica lub środek obiektu), niska lub nieznaleziony.
+
+Sprawdź każdy wynik: musi leżeć w KRAJU i miejscowości ze ZMIENNYCH, a odległości do sąsiednich miejsc mają być sensowne (porównaj z odległościami z raportów). Odrzucaj niezgodne wyniki zamiast zgadywać. Dla obiektów przyrodniczych (lodowiec, jezioro, szczyt) zaznacz, że to przybliżony środek, a nie wejście. Dla szlaków podaj początek szlaku, jeśli go znajdziesz, a nie szczyt.
+
+Wynik: places.json (id, nazwa, kategoria, szerokość, długość lub null, pewność, obiekt OSM, nazwa pełna, uwaga) oraz places_check.md z listą słabych i nieznalezionych miejsc.
+
+ZMIENNE (wypełnij, niepotrzebne zostaw puste):
+KRAJ (w którym muszą leżeć wyniki):
+NAZWA PROJEKTU (do nagłówka User-Agent, domyślnie przewodnik-podrozy):
+KONTAKT (opcjonalnie: adres e-mail lub strona):</pre></div>
+  <div class="ramka sprawdz"><span class="nag">Sprawdź</span>W <code>places_check.md</code> jest lista miejsc o niskiej pewności i nieznalezionych. Zadecyduj, czy akceptujesz, że przy nich nie będzie znacznika na mapie (rekomendowane), czy ręcznie poprosisz o dodanie.</div>
+</section>
+
+<section id="b3">
+  <h2>B3. Budowa strony</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego</span>Stronę składa <strong>skrypt z danych</strong> (<code>trasa.json</code>, <code>places.json</code>, <code>images.json</code>), a nie ręka modelu. Dzięki temu zmiana trasy to zmiana danych i ponowne zbudowanie, a nie przepisywanie strony. Strona jest statyczna, bez śledzenia i bez zewnętrznych obrazów: zdjęcia leżą obok pliku.</div>
+  <div class="prompt"><div class="pasek"><span>B3. Strona</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Zbuduj statyczną stronę HTML w folderze strona/ (index.html, css, js, img). Korzystaj WYŁĄCZNIE z danych z trasa.json, places.json i images.json; niczego nie dopisuj z pamięci. Skrypt budowy zapisz w strona/_build/ (python build.py generuje stronę), bo ręcznie zmieniane będą tylko css i js. Wartości z bloku ZMIENNE na końcu tego prompta traktuj jako ustalone, a dla pustych pól użyj domyślnych.
+
+Zawartość:
+1. Okładka: zdjęcie, TYTUŁ STRONY, daty, podsumowanie trasy, liczby (dni, regiony, budżet jako zakres).
+2. Interaktywna mapa Leaflet (wersja przypięta, z cdnjs.cloudflare.com), warstwy do włączania: Trasa i loty (łuki lotów, przerywana linia dla autobusu z podpisem "orientacyjnie"), Atrakcje, Noclegi, Kulinaria. Znaczniki tylko z places.json z niepustymi współrzędnymi; niska pewność ma inny wygląd znacznika. Okienko znacznika: nazwa, zdjęcie, 1-2 zdania, cena i ocena z datą i znacznikiem "niepotwierdzone", gdy trzeba, link do źródła. Kliknięcie dnia w osi czasu przybliża mapę. Podkład mapy: PODKŁAD MAPY ze ZMIENNYCH; NIE używaj CARTO (wymaga klucza API) ani domyślnie OpenStreetMap (blokuje strony otwierane z pliku).
+3. Awaryjny schemat trasy w SVG (miejsca, loty, noce), który pokazuje się, gdy mapa się nie załaduje i w druku. Kolory schematu mają zmieniać się razem z trybem jasnym i ciemnym.
+4. Oś czasu: karta na każdy dzień (data, dzień tygodnia, baza, plan z godzinami, transport z czasem i ceną, koszt, plan B na pogodę, uwaga o bezpieczeństwie, rezerwacje, "kulinaria dnia").
+5. Zakładki: Noclegi (karty z ocenami, liczbą opinii, cenami z datami), Kulinaria (lista "koniecznie spróbuj", dania, lokale z zastrzeżeniem o źródle ocen), Budżet (tabela z podziałem "ze źródła" i "założenie", sumy niska, środkowa, wysoka), Bezpieczeństwo, Rezerwacje i checklista (pola do odhaczania, zapis w przeglądarce w try/catch, strona działa bez zapisu), Do zweryfikowania (wszystkie niepotwierdzone i nieznane, według ważności).
+6. Stopka: stopki zdjęć (autor, licencja, link) dla każdego użytego zdjęcia, lista źródeł z datą dostępu, wyraźna informacja, że ceny i rozkłady się zmieniają i trzeba je sprawdzić przed rezerwacją.
+
+Wymagania techniczne: strona w JĘZYKU STRONY ze ZMIENNYCH, dostosowana do telefonu (marginesy 16 px, bez poziomego przewijania), tryb jasny i ciemny, alternatywne opisy zdjęć z images.json, leniwe ładowanie obrazów, wersja do druku. Wszystkie dane trzymaj w jednym obiekcie, żeby dało się je łatwo zmienić.
+
+ZMIENNE (wypełnij, niepotrzebne zostaw puste):
+TYTUŁ STRONY:
+JĘZYK STRONY (domyślnie polski):
+PODKŁAD MAPY (domyślnie Esri World Street Map, drugi OpenTopoMap):</pre></div>
+  <div class="ramka sprawdz"><span class="nag">Sprawdź</span>Otwórz <code>strona\index.html</code>. Powinieneś zobaczyć okładkę, mapę ze znacznikami i karty dni. Jeśli mapa pokazuje szare kafelki z napisem „Access blocked” albo „API key required”, to problem podkładu: patrz sekcja o typowych problemach.</div>
+</section>
+
+<section id="b4">
+  <h2>B4. Przelicznik walut z kursami NBP</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego</span><p>Ceny są w peso, dolarach i euro, a Ty myślisz w złotych. Strona pobiera <strong>kursy NBP raz dziennie</strong> i przelicza wszystkie ceny, także w tabeli budżetu. Gdy sieć zawiedzie, używa kursów z dnia budowy i mówi o tym wprost.</p>
+  <p>Trzy ważne rzeczy, które sprawdziliśmy w praktyce:</p>
+  <ul>
+    <li><strong>Peso (ARS) jest w tabeli B NBP, nie w A.</strong> Tabela A (dolar, euro) jest codzienna w dni robocze, a tabela B jest <strong>tygodniowa</strong>. W Twoim kraju docelowym sprawdź, w której tabeli jest waluta, zanim zbudujesz przelicznik.</li>
+    <li>Kurs peso ma niewiele cyfr znaczących, więc przeliczenie niesie błąd rzędu 1-2%.</li>
+    <li>To kurs średni. Kantory, karty i bankomaty liczą inaczej (spread, prowizje), a w niektórych krajach kurs oficjalny odbiega od faktycznie stosowanego. Strona ma to napisać.</li>
+  </ul></div>
+  <div class="prompt"><div class="pasek"><span>B4. Przelicznik walut</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Dodaj do strony przelicznik walut z kursami NBP i pokazuj ceny w złotych oraz w walucie lokalnej. Wartości z bloku ZMIENNE na końcu tego prompta traktuj jako ustalone, a dla pustych pól użyj domyślnych.
+
+Kursy: pobieraj z https://api.nbp.pl (tabela A: waluty główne; tabela B: waluty egzotyczne). Najpierw sprawdź, w której tabeli jest WALUTA LOKALNA ze ZMIENNYCH i jak często NBP ją publikuje. Punkt końcowy: /api/exchangerates/rates/{tabela}/{kod}/last/1/?format=json. Wartość "mid" to złote za 1 jednostkę.
+
+Zasady:
+1. Pobieraj z CZĘSTOTLIWOŚCIĄ ze ZMIENNYCH (domyślnie raz na dzień kalendarzowy); zapis w localStorage z datą (każdy dostęp w try/catch, strona ma działać bez zapisu), limit czasu 6 s, sprawdzanie kształtu i wartości odpowiedzi.
+2. Przy braku sieci i bez zapisu użyj kursów awaryjnych wpisanych przy budowie, z komunikatem "kursy awaryjne z datą budowy, brak połączenia z NBP".
+3. Pasek na górze: data kursów (osobno dla każdej tabeli), przełącznik waluty głównej (PLN, waluta lokalna i WALUTY DODATKOWE) oraz kalkulator kwota na walutę.
+4. Wszystkie ceny na stronie (karty dni, noclegi, kulinaria, opłaty, loty, bilety, tabela budżetu z sumami) zamień na elementy przeliczane z danych: domyślnie złote i waluta lokalna, z walutą oryginalną w nawiasie, z "ok." przy wartościach przeliczonych. Ceny podane w źródle w walucie lokalnej zachowują ją jako oryginał. Sumy budżetu liczone w JS z danych; przy kursach awaryjnych mają dać dokładnie te same liczby co statyczny tekst (sprawdź skryptem i pokaż różnice, nie ukrywaj ich).
+5. Pod budżetem opisz: tabela A dzienna, tabela B tygodniowa (jeśli dotyczy), zaokrąglenie kursu, kursy rzeczywiste się różnią. Dopisz api.nbp.pl do listy zewnętrznych zasobów.
+6. Wersja do druku: ceny z kursami zapisanymi, bez kalkulatora.
+
+ZMIENNE (wypełnij, niepotrzebne zostaw puste):
+WALUTA LOKALNA (kod, np. ARS):
+WALUTY DODATKOWE (domyślnie USD, EUR):
+CZĘSTOTLIWOŚĆ ODŚWIEŻANIA KURSÓW (domyślnie raz dziennie):</pre></div>
+  <div class="ramka sprawdz"><span class="nag">Sprawdź</span>Przełącz walutę główną: ceny w kartach dni i sumy w budżecie zmieniają się razem. W konsoli przeglądarki nie ma błędów, a przy drugim wczytaniu strony w tym samym dniu nie ma nowych zapytań do NBP.</div>
+</section>
+
+<section id="b5">
+  <h2>B5. Zdjęcia na pełnym ekranie</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego</span>Miniatury w kartach i okienkach mapy są małe. Powiększenie ładuje większy plik dopiero po kliknięciu, więc strona startuje szybko. Podpis z autorem i licencją jest w nakładce, żeby stopka była widoczna także tam.</div>
+  <div class="prompt"><div class="pasek"><span>B5. Pełny ekran zdjęć</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Dodaj do strony powiększanie zdjęć na pełnym ekranie, bez bibliotek zewnętrznych.
+
+Kliknięcie dowolnego zdjęcia (okładka, karty dni, noclegi, kulinaria, miniatury w okienkach mapy) otwiera nakładkę z wersją 1600 px (wygeneruj pliki 1600 px tylko dla użytych zdjęć), podpisem (polski opis alternatywny) i stopką autora z licencją i linkiem do Commons.
+Wymagania: role=dialog z zatrzymaniem fokusu i powrotem fokusu do klikniętego elementu; zamknięcie przyciskiem, klawiszem Esc, kliknięciem poza zdjęciem i przesunięciem w dół; poprzednie i następne zdjęcie przyciskami, strzałkami i przesunięciem palcem; brak przewijania tła; działa na szerokości 390 px i w obu trybach kolorów; szanuje prefers-reduced-motion; zdjęcia w okienkach mapy (tworzone dynamicznie) też działają (delegacja zdarzeń).</pre></div>
+  <div class="ramka sprawdz"><span class="nag">Sprawdź</span>Kliknij zdjęcie na okładce, w karcie dnia i w okienku mapy. Każde otwiera nakładkę, Esc ją zamyka, a strzałki przechodzą do następnego zdjęcia.</div>
+</section>
+
+<section id="b6">
+  <h2>B6. Test strony w przeglądarce i niezależna kontrola</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego</span>Strona, której nikt nie otworzył w przeglądarce, to tylko nadzieja. W budowie wzorcowej test w przeglądarce wychwycił m.in. błędny podkład mapy (kafelki z napisem o braku klucza przechodziły jako „załadowane”). Drugi, niezależny agent przeliczył budżet, porównał współrzędne znaczników z danymi i znalazł błędny zakres ceny oraz godziny otwarcia jednego muzeum.</div>
+  <div class="prompt"><div class="pasek"><span>B6. Test i niezależna kontrola strony</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Przetestuj stronę i zweryfikuj ją niezależnie od jej autora. Wartości z bloku ZMIENNE na końcu tego prompta traktuj jako ustalone, a dla pustych pól użyj domyślnych.
+
+Przeglądarka nie otwiera plików z dysku (adres file://), więc uruchom lokalny serwer: python -I -m http.server PORT --bind 127.0.0.1 w folderze strona/ (w tle; na końcu zatrzymaj TEN proces, a innych procesów Pythona na komputerze nie ruszaj). Użyj Chrome z własną kartą.
+
+Sprawdź: brak błędów w konsoli; mapa pokazuje kafelki (nie napis o blokadzie lub kluczu API); wszystkie znaczniki z places.json; przełączniki warstw; kliknięcie dnia przybliża mapę; checklista zapisuje stan; przełącznik waluty zmienia ceny i sumy; powiększanie zdjęć; szerokość 390 px bez poziomego przewijania; tryb ciemny (zrób zrzut ekranu i oceń czytelność schematu, kolorów i tekstu); wersja do druku. Oceniaj wygląd po zrzutach ekranu, a nie tylko po braku błędów.
+
+Niezależna kontrola (osobny podagent, który nie budował strony): przeprowadź ścieżkę faktów dla co najmniej tylu twierdzeń, ile podano w ZMIENNYCH, ze strony do trasa.json i plików źródłowych, przelicz każdą sumę budżetu, sprawdź dni tygodnia i dni zamknięcia, porównaj współrzędne znaczników z places.json, sprawdź stopki zdjęć z images.json. Wynik: strona/weryfikacja.md z werdyktem i listą wad według ważności. Poprawiaj tylko oczywiste błędy faktów (i wypisz je).
+
+ZMIENNE (wypełnij, niepotrzebne zostaw puste):
+PORT SERWERA (domyślnie dowolny wolny):
+LICZBA SPRAWDZANYCH TWIERDZEŃ (domyślnie 40):</pre></div>
+  <div class="ramka uwaga"><span class="nag">Uwaga</span>Po testach <strong>sprawdź, czy nie zostały procesy serwera</strong> (<code>python -m http.server</code>). W budowie wzorcowej agenci zostawili kilka. Są bezpieczne (nasłuchują tylko na 127.0.0.1), ale warto je zatrzymać.</div>
+  <div class="ramka sprawdz"><span class="nag">Sprawdź</span>W <code>strona\weryfikacja.md</code> jest werdykt, a lista wad nie zawiera żadnego „błędu faktu”. Otwórz stronę i poklikaj sam przez 5 minut: najwięcej błędów widać oczami.</div>
+</section>
+
+<section id="skille">
+  <h2>Zapis w dwóch skillach</h2>
+  <div class="ramka dlaczego"><span class="nag">Dlaczego dwa skille, a nie jeden</span>
+  <ul>
+    <li><code>przewodnik-podrozy</code> (część A) robi wyszukiwanie i plan. Jest użyteczny sam, np. gdy chcesz tylko plan w notatce.</li>
+    <li><code>strona-przewodnika</code> (część B) bierze gotowy <code>trasa.json</code> i składa stronę. Możesz go uruchomić ponownie po zmianie trasy, <strong>bez wyszukiwania od nowa</strong> (a to najdroższa część).</li>
+    <li>Oba pliki łączy format <code>trasa.json</code>, więc ich zmiany się nie plątają.</li>
+  </ul></div>
+  <div class="prompt"><div class="pasek"><span>C1. Zrób dwa skille</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>Zamień to, co zbudowaliśmy, w dwa skille Claude Code. Skorzystaj ze skilla skill-creator, jeśli go masz. Wartości z bloku ZMIENNE na końcu tego prompta traktuj jako ustalone, a dla pustych pól użyj domyślnych.
+
+1. Skill A (NAZWA SKILLA A): wywołanie /NAZWA SKILLA A KRAJ miesiąc. Obejmuje kroki A0-A7: wywiad i założenia (z pytaniami do mnie), plan badań, zwiad regionów równolegle, analizę z wyborem trasy (zatrzymaj się i poczekaj na moją decyzję), pogłębienie z przeglądarką, kulinaria, dwie kontrole, zapis trasa.json.
+2. Skill B (NAZWA SKILLA B): wywołanie /NAZWA SKILLA B. Obejmuje kroki B1-B6: zdjęcia, współrzędne, budowa strony, przelicznik walut, pełny ekran zdjęć, test i niezależna kontrola. Pobiera dane z trasa.json.
+
+Każdy skill ma plik SKILL.md (w JĘZYKU SKILLI, krótko: co robi, kolejność kroków, punkty, w których pytasz mnie o decyzję) i folder scripts z narzędziami, które napisaliśmy (sprawdz_plan.py, geokodowanie, budowa strony). Kroki w SKILL.md mają odwoływać się do wzorców promptów z naszej pracy, ale z parametrami zamiast danych z naszego wyjazdu. Parametry ze ZMIENNYCH tych promptów (kraj, termin, budżet itd.) skill ma zbierać na początku jednym blokiem pytań, a nie rozsiewać po krokach.
+
+Uogólnij na dowolny kraj. To najtrudniejsza część: zdecyduj, co zależy od kraju. Na przykład: tabela NBP z walutą lokalną (A lub B), sezon i pora deszczowa, system wiz, nazwy urzędów turystycznych, język do szukania. Zapisz te rzeczy jako pytania na początku skilla, a nie jako stałe.
+
+Skille zapisz w miejscu podanym w ZMIENNYCH. W SKILL.md opisz, kiedy skill ma się uruchamiać i kiedy nie. Na końcu pokaż mi, co jest w każdym folderze, i streść oba SKILL.md w 5 punktach.
+
+ZMIENNE (wypełnij, niepotrzebne zostaw puste):
+NAZWA SKILLA A (domyślnie przewodnik-podrozy):
+NAZWA SKILLA B (domyślnie strona-przewodnika):
+MIEJSCE ZAPISU (folder projektu .claude/skills albo skille globalne):
+JĘZYK SKILLI (domyślnie polski):</pre></div>
+  <h3>Użycie skilla w nowej rozmowie</h3>
+  <div class="prompt"><div class="pasek"><span>C2. Przykład użycia</span><button type="button" data-kopiuj>Kopiuj</button></div><pre>/przewodnik-podrozy Japonia kwiecień</pre></div>
+  <div class="ramka uwaga"><span class="nag">Uwaga</span>Zamknij Claude (<code>/exit</code>) i uruchom go ponownie w folderze projektu, zanim wywołasz skill: nowa rozmowa pokazuje, że skill działa sam, bez kontekstu naszej pracy. Tego kroku Claude nie zrobi za Ciebie. Skill lokalny działa tylko w folderze projektu; jeśli chcesz go mieć wszędzie, poproś Claude o przeniesienie do skilli globalnych (<code>.claude/skills</code> w folderze domowym).</div>
+</section>
+
+<section id="dodac">
+  <h2>Co jeszcze warto dodać</h2>
+  <p>Kolejność według mojej oceny: od rzeczy, które najbardziej podnoszą wiarygodność i użyteczność.</p>
+  <div class="tabela-wrap"><table>
+    <tr><th>Pomysł</th><th>Po co</th><th>Pilność</th></tr>
+    <tr><td><strong>Ponowne sprawdzenie cen przed wyjazdem</strong> (przypomnienie np. 8 tygodni i 2 tygodnie przed)</td><td>ceny, rozkłady i zamknięcia się starzeją, a wyjazd jest za pół roku. Skill <code>/schedule</code> lub <code>/loop</code> może uruchomić krótką kontrolę wybranych pozycji i wypisać, co się zmieniło</td><td>wysoka</td></tr>
+    <tr><td><strong>Kolejność rezerwacji</strong> z terminami</td><td>np. lot, którego rozkład ustala resztę, rezerwacje parków i schronisk z wyprzedzeniem; strona ma to w checkliście, ale warto mieć osobną, krótką listę „zrób w tym tygodniu”</td><td>wysoka</td></tr>
+    <tr><td><strong>Pakiet bezpieczeństwa w jednym miejscu</strong></td><td>numery alarmowe, adres konsulatu, kopie dokumentów, numer polisy, co zrobić przy kradzieży, lista szczepień i leków. To najczęściej czytany fragment w podróży</td><td>wysoka</td></tr>
+    <tr><td><strong>Eksport do telefonu</strong>: plik KML lub GPX z miejscami, plik kalendarza ICS z dniami</td><td>mapa działa w przeglądarce, ale w górach bez zasięgu potrzebne jest coś w telefonie. KML wczytasz do aplikacji map offline, ICS do kalendarza</td><td>wysoka</td></tr>
+    <tr><td><strong>Wersja PDF do druku</strong></td><td>strona ma wersję do druku, ale warto wygenerować gotowy plik i trzymać offline</td><td>średnia</td></tr>
+    <tr><td><strong>Karta „podstawowe zwroty”</strong> w języku kraju (transport, jedzenie, nagłe wypadki)</td><td>przydatne bez zasięgu</td><td>średnia</td></tr>
+    <tr><td><strong>Wybór modelu do zadania</strong></td><td>zwiad w regionach nie musi iść najsilniejszym modelem, a analiza trasy i niezależna kontrola tak. To największa oszczędność limitu</td><td>średnia</td></tr>
+    <tr><td><strong>Plan B dla całej trasy</strong>, nie tylko dla dni</td><td>co zrobisz, jeśli lot się odwoła, strajk zablokuje transport albo droga zostanie zamknięta. Zapas dni przed lotem powrotnym trzeba wpisać wprost</td><td>średnia</td></tr>
+    <tr><td><strong>Rejestr zmian planu</strong> (changelog)</td><td>w budowie wzorcowej trasa zmieniała się w trakcie (nocleg dzień wcześniej). Zapisywanie, co się zmieniło i dlaczego, oszczędza zgadywania później</td><td>niska</td></tr>
+    <tr><td><strong>Wiele osób</strong> (podział kosztów, pokoje)</td><td>jeśli jedziesz w grupie, koszty noclegów i auta liczą się inaczej niż dla jednej osoby</td><td>zależy od Ciebie</td></tr>
+    <tr><td><strong>Warunki użytkowania podkładów mapy i licencje zdjęć</strong></td><td>do użytku własnego to niewielki problem, ale przed publicznym udostępnieniem strony trzeba sprawdzić warunki Esri i OpenTopoMap oraz pamiętać o stopkach zdjęć</td><td>przed publikacją</td></tr>
+  </table></div>
+  <div class="ramka dlaczego"><span class="nag">Czego bym nie dodawał</span>Rezerwowania i płacenia przez Claude. Przewodnik ma Ci dać pewność, co zarezerwować, a decyzja o płatności powinna zostać po Twojej stronie (dane osobowe, karty, zwroty). W promptach jest zakaz logowania i płacenia i warto go zachować.</div>
+</section>
+
+<section id="problemy">
+  <h2>Typowe problemy (z prawdziwego przebiegu)</h2>
+  <div class="tabela-wrap"><table>
+    <tr><th>Co widzisz</th><th>Co zrobić</th></tr>
+    <tr><td>Raporty z K1 mają mało źródeł, a wiele „niepotwierdzone”</td><td>to normalne dla zwiadu. Nie poprawiaj na siłę, uzupełnij w K3 przeglądarką na stronach oficjalnych</td></tr>
+    <tr><td>Strona oficjalna zwraca 403 albo ochronę przed botami</td><td>agent ma przejść dalej i zapisać „nieznane”. Sprawdź tę pozycję sam przed rezerwacją</td></tr>
+    <tr><td>Podagent nie użył przeglądarki mimo polecenia</td><td>uruchom go ponownie, dopisując: "użyj Chrome z własną kartą, wyniki wyszukiwarki to za mało"</td></tr>
+    <tr><td>Lot odlatuje, zanim zdążysz dojechać</td><td>kontrola 1 ma to wykryć. Jeśli nie wykryła, dopisz regułę do skryptu. Zmień nocleg lub dzień, nie rozkład lotu</td></tr>
+    <tr><td>Mapa pokazuje „Access blocked” albo „API key required”</td><td>podkład nie działa dla stron z pliku lub wymaga klucza. Użyj Esri World Street Map lub OpenTopoMap (prompt B3 już tak mówi). Dla OpenStreetMap trzeba hostować stronę pod adresem http lub https</td></tr>
+    <tr><td>Chrome nie otwiera <code>file://</code> dla agentów</td><td>agent uruchamia lokalny serwer (prompt B6) i testuje przez <code>127.0.0.1</code></td></tr>
+    <tr><td>Waluta lokalna nie ma kursu w tabeli A NBP</td><td>sprawdź tabelę B (publikowaną tygodniowo) i opisz w stronie, że kurs jest tygodniowy i zaokrąglony</td></tr>
+    <tr><td>Suma budżetu na stronie różni się o kilka złotych od planu</td><td>różni się kurs lub zaokrąglenie. Nie ukrywaj różnicy: wpisz ją do changelogu i opisz przyczynę</td></tr>
+    <tr><td>Po testach zostały procesy <code>python -m http.server</code></td><td>zatrzymaj tylko te, które uruchomił agent (sprawdź wiersz poleceń), reszty Pythona nie ruszaj</td></tr>
+    <tr><td>Komunikat o wyczerpanym limicie</td><td>poczekaj na odnowienie. Wszystko jest w plikach, więc po powrocie wklej kolejny prompt lub dokończ krok</td></tr>
+    <tr><td>Restauracja z listy okazała się zamknięta</td><td>to ryzyko danych z agregatorów. Prompt A5 wymaga sprawdzenia statusu; jeśli mimo to się zdarzy, usuń pozycję i dopisz kontrolę</td></tr>
+    <tr><td>Skill nie podpowiada się po wpisaniu <code>/</code></td><td>uruchom Claude ponownie w folderze projektu i sprawdź, czy plik <code>.claude/skills/przewodnik-podrozy/SKILL.md</code> istnieje</td></tr>
+  </table></div>
+</section>
+
+<section id="wynik-opis">
+  <h2>Wynik wzorcowy: strona z przebiegu dla Argentyny</h2>
+  <p>To jest strona, którą zbudowaliśmy w kroku B3-B6 na podstawie przebiegu z tej instrukcji: dwa tygodnie w Argentynie, marzec 2027, jedna osoba, trekking, noclegi minimum 4 gwiazdki. Otwórz ją zanim zaczniesz własny przebieg i porównaj z wynikiem, który dostaniesz.</p>
+  <p><button type="button" class="przycisk" data-otworz-wynik>Pokaż w zakładce na górze</button><a class="przycisk jasny" href="wynik-wzorcowy/index.html" target="_blank" rel="noopener">Otwórz w nowym oknie</a></p>
+  <h3>Co w niej zobaczysz</h3>
+  <ul>
+    <li><strong>mapę trasy</strong> ze znacznikami, lotami i warstwami (atrakcje, noclegi), z przełącznikiem podkładu mapy;</li>
+    <li><strong>oś czasu z 16 kartami dni</strong>: plan, transport, koszt, plan B na pogodę, uwaga o bezpieczeństwie;</li>
+    <li><strong>noclegi z ocenami</strong>, <strong>kulinaria</strong>, <strong>budżet</strong> z podziałem na pozycje ze źródeł i założenia, <strong>bezpieczeństwo</strong>, checklistę rezerwacji i listę rzeczy do zweryfikowania;</li>
+    <li><strong>przelicznik walut</strong> z kursami NBP (złote, peso, dolary, euro) oraz <strong>zdjęcia na pełnym ekranie</strong> ze stopkami autorów.</li>
+  </ul>
+  <div class="ramka uwaga"><span class="nag">Uwaga</span>To przykład z jednego przebiegu, a nie oferta ani aktualny cennik. Ceny, loty i godziny pochodzą z października 2026 roku i do wyjazdu się zmienią, a część informacji jest oznaczona jako niepotwierdzona. Mapa wymaga internetu. Zdjęcia pochodzą z Wikimedia Commons, a autorzy i licencje są w stopkach. Wynik działa, gdy instrukcję otwierasz z folderu, w którym obok leży folder <code>wynik-wzorcowy</code>.</div>
+</section>
+
+</main></div></div>
+<div id="panel-wynik" role="tabpanel" aria-labelledby="zak-wynik" hidden>
+  <div class="pasek-wyniku">
+    <p>Wynik wzorcowy: strona zbudowana według części B tej instrukcji (Argentyna, marzec 2027). To przykład z jednego przebiegu; ceny z października 2026 roku.</p>
+    <a class="przycisk jasny" href="wynik-wzorcowy/index.html" target="_blank" rel="noopener">Otwórz w nowym oknie</a>
+  </div>
+  <iframe id="ramka-wynik" data-src="wynik-wzorcowy/index.html" title="Wynik wzorcowy: przewodnik po Argentynie" loading="lazy"></iframe>
+</div>
+<footer><div class="wrap">Instrukcja oparta na przebiegu budowy przewodnika po Argentynie (marzec 2027). Dane liczbowe i przykłady dotyczą tej budowy; w Twoim przypadku sprawdzaj je od nowa.</div></footer>
+
+<script>
+(function(){
+  // kopiowanie promptow
+  document.querySelectorAll('[data-kopiuj]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var tekst=b.closest('.prompt').querySelector('pre').textContent;
+      var stary=b.textContent;
+      function gotowe(){b.textContent='Skopiowano';setTimeout(function(){b.textContent=stary;},1600);}
+      try{
+        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(tekst).then(gotowe,function(){});return;}
+      }catch(e){}
+      try{
+        var t=document.createElement('textarea');t.value=tekst;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);gotowe();
+      }catch(e){}
+    });
+  });
+
+  // zakladki: Instrukcja / Wynik wzorcowy
+  var tI=document.getElementById('zak-instrukcja'), tW=document.getElementById('zak-wynik');
+  var pI=document.getElementById('panel-instrukcja'), pW=document.getElementById('panel-wynik');
+  var ramka=document.getElementById('ramka-wynik');
+  function pokaz(co, bezHasha){
+    var w=(co==='wynik');
+    pI.hidden=w; pW.hidden=!w;
+    tI.setAttribute('aria-selected',String(!w)); tW.setAttribute('aria-selected',String(w));
+    if(w && ramka && !ramka.getAttribute('src')) ramka.setAttribute('src',ramka.getAttribute('data-src'));
+    if(!bezHasha){ try{ history.replaceState(null,'',w?'#wynik':location.pathname+location.search); }catch(e){} }
+    if(w) window.scrollTo(0,0);
+  }
+  tI.addEventListener('click',function(){pokaz('instrukcja');});
+  tW.addEventListener('click',function(){pokaz('wynik');});
+  document.querySelectorAll('[data-otworz-wynik]').forEach(function(b){b.addEventListener('click',function(){pokaz('wynik');});});
+  if(location.hash==='#wynik') pokaz('wynik',true);
+
+  // pasek boczny: na telefonie zwiniety, na komputerze zawsze rozwiniety
+  var det=document.getElementById('boczny');
+  var mq=window.matchMedia?window.matchMedia('(max-width:900px)'):null;
+  function ustawSpis(){ if(det) det.open=!(mq&&mq.matches); }
+  ustawSpis();
+  if(mq){ if(mq.addEventListener) mq.addEventListener('change',ustawSpis); else if(mq.addListener) mq.addListener(ustawSpis); }
+
+  // podswietlenie biezacej sekcji
+  var linki={}; var sekcje=[];
+  document.querySelectorAll('.boczny a[href^="#"]').forEach(function(a){
+    var id=a.getAttribute('href').slice(1); var el=document.getElementById(id);
+    if(el){ linki[id]=a; sekcje.push(el); }
+    a.addEventListener('click',function(){ if(mq&&mq.matches&&det) det.open=false; });
+  });
+  var aktywny=null;
+  function ustawAktywny(id){
+    if(aktywny===id||!linki[id]) return;
+    if(aktywny&&linki[aktywny]) linki[aktywny].classList.remove('aktywny');
+    aktywny=id; linki[id].classList.add('aktywny');
+    // przesun pasek boczny tak, zeby aktywny link byl widoczny (bez przewijania strony)
+    if(det&&det.scrollHeight>det.clientHeight){
+      var l=linki[id], top=l.offsetTop, dolna=top+l.offsetHeight;
+      if(top<det.scrollTop+40) det.scrollTop=Math.max(0,top-60);
+      else if(dolna>det.scrollTop+det.clientHeight-40) det.scrollTop=dolna-det.clientHeight+60;
+    }
+  }
+  // aktywna jest ostatnia sekcja, ktorej gorna krawedz minela linie ok. 30% wysokosci okna; na samym dole strony ostatnia
+  var czeka=false;
+  function sprawdz(){
+    czeka=false;
+    if(pI.hidden||!sekcje.length) return;
+    var granica=Math.min(180,window.innerHeight*0.3), wybrany=sekcje[0].id;
+    for(var i=0;i<sekcje.length;i++){ if(sekcje[i].getBoundingClientRect().top<=granica) wybrany=sekcje[i].id; }
+    if(window.innerHeight+window.pageYOffset>=document.documentElement.scrollHeight-4) wybrany=sekcje[sekcje.length-1].id;
+    ustawAktywny(wybrany);
+  }
+  window.addEventListener('scroll',function(){ if(!czeka){ czeka=true; setTimeout(sprawdz,40); } },{passive:true});
+  window.addEventListener('resize',sprawdz);
+  sprawdz();
+})();
+</script>
+</body>
+</html>
