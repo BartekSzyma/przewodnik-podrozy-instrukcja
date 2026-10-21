@@ -539,7 +539,7 @@ KONTAKT (opcjonalnie: adres e-mail lub strona):</pre></div>
 
 Zawartość:
 1. Okładka: zdjęcie, TYTUŁ STRONY, daty, podsumowanie trasy, liczby (dni, regiony, budżet jako zakres).
-2. Interaktywna mapa Leaflet (wersja przypięta, z cdnjs.cloudflare.com), warstwy do włączania: Trasa i loty (łuki lotów, przerywana linia dla autobusu z podpisem "orientacyjnie"), Atrakcje, Noclegi, Kulinaria. Znaczniki tylko z places.json z niepustymi współrzędnymi; niska pewność ma inny wygląd znacznika. Okienko znacznika: nazwa, zdjęcie, 1-2 zdania, cena i ocena z datą i znacznikiem "niepotwierdzone", gdy trzeba, link do źródła. Kliknięcie dnia w osi czasu przybliża mapę. Podkład mapy: PODKŁAD MAPY ze ZMIENNYCH; NIE używaj CARTO (wymaga klucza API) ani domyślnie OpenStreetMap (blokuje strony otwierane z pliku).
+2. Interaktywna mapa Leaflet (wersja przypięta, z cdnjs.cloudflare.com), warstwy do włączania: Trasa i loty (łuki lotów, przerywana linia dla autobusu z podpisem "orientacyjnie"), Atrakcje, Noclegi, Kulinaria. Znaczniki tylko z places.json z niepustymi współrzędnymi; niska pewność ma inny wygląd znacznika. Okienko znacznika: nazwa, zdjęcie, 1-2 zdania, cena i ocena z datą i znacznikiem "niepotwierdzone", gdy trzeba, link do źródła. Kliknięcie dnia w osi czasu przybliża mapę. Podkład mapy: PODKŁAD MAPY ze ZMIENNYCH; NIE używaj CARTO (wymaga klucza API). OpenStreetMap blokuje strony otwierane z pliku, więc wybierz podkład domyślny w kodzie według protokołu: na http i https domyślnie OpenStreetMap, przy file:// domyślnie Esri World Street Map; OpenTopoMap zawsze do wyboru przyciskiem warstw.
 3. Awaryjny schemat trasy w SVG (miejsca, loty, noce), który pokazuje się, gdy mapa się nie załaduje i w druku. Kolory schematu mają zmieniać się razem z trybem jasnym i ciemnym.
 4. Oś czasu: karta na każdy dzień (data, dzień tygodnia, baza, plan z godzinami, transport z czasem i ceną, koszt, plan B na pogodę, uwaga o bezpieczeństwie, rezerwacje, "kulinaria dnia").
 5. Zakładki: Noclegi (karty z ocenami, liczbą opinii, cenami z datami), Kulinaria (lista "koniecznie spróbuj", dania, lokale z zastrzeżeniem o źródle ocen), Budżet (tabela z podziałem "ze źródła" i "założenie", sumy niska, środkowa, wysoka), Bezpieczeństwo, Rezerwacje i checklista (pola do odhaczania, zapis w przeglądarce w try/catch, strona działa bez zapisu), Do zweryfikowania (wszystkie niepotwierdzone i nieznane, według ważności).
@@ -550,7 +550,7 @@ Wymagania techniczne: strona w JĘZYKU STRONY ze ZMIENNYCH, dostosowana do telef
 ZMIENNE (wypełnij, niepotrzebne zostaw puste):
 TYTUŁ STRONY:
 JĘZYK STRONY (domyślnie polski):
-PODKŁAD MAPY (domyślnie Esri World Street Map, drugi OpenTopoMap):</pre></div>
+PODKŁAD MAPY (domyślnie według protokołu: OpenStreetMap na http/https, Esri przy file://; dodatkowo OpenTopoMap):</pre></div>
   <div class="ramka sprawdz"><span class="nag">Sprawdź</span>Otwórz <code>strona\index.html</code>. Powinieneś zobaczyć okładkę, mapę ze znacznikami i karty dni. Jeśli mapa pokazuje szare kafelki z napisem „Access blocked” albo „API key required”, to problem podkładu: patrz sekcja o typowych problemach.</div>
 </section>
 
@@ -667,7 +667,7 @@ JĘZYK SKILLI (domyślnie polski):</pre></div>
     <tr><td>Strona oficjalna zwraca 403 albo ochronę przed botami</td><td>agent ma przejść dalej i zapisać „nieznane”. Sprawdź tę pozycję sam przed rezerwacją</td></tr>
     <tr><td>Podagent nie użył przeglądarki mimo polecenia</td><td>uruchom go ponownie, dopisując: "użyj Chrome z własną kartą, wyniki wyszukiwarki to za mało"</td></tr>
     <tr><td>Lot odlatuje, zanim zdążysz dojechać</td><td>kontrola 1 ma to wykryć. Jeśli nie wykryła, dopisz regułę do skryptu. Zmień nocleg lub dzień, nie rozkład lotu</td></tr>
-    <tr><td>Mapa pokazuje „Access blocked” albo „API key required”</td><td>podkład nie działa dla stron z pliku lub wymaga klucza. Użyj Esri World Street Map lub OpenTopoMap (prompt B3 już tak mówi). Dla OpenStreetMap trzeba hostować stronę pod adresem http lub https</td></tr>
+    <tr><td>Mapa pokazuje „Access blocked” albo „API key required”</td><td>podkład nie działa dla stron z pliku lub wymaga klucza. Dla stron z pliku użyj Esri World Street Map lub OpenTopoMap, a dla stron pod adresem http lub https domyślnie OpenStreetMap (prompt B3 wybiera podkład według protokołu)</td></tr>
     <tr><td>Chrome nie otwiera <code>file://</code> dla agentów</td><td>agent uruchamia lokalny serwer (prompt B6) i testuje przez <code>127.0.0.1</code></td></tr>
     <tr><td>Waluta lokalna nie ma kursu w tabeli A NBP</td><td>sprawdź tabelę B (publikowaną tygodniowo) i opisz w stronie, że kurs jest tygodniowy i zaokrąglony</td></tr>
     <tr><td>Suma budżetu na stronie różni się o kilka złotych od planu</td><td>różni się kurs lub zaokrąglenie. Nie ukrywaj różnicy: wpisz ją do changelogu i opisz przyczynę</td></tr>

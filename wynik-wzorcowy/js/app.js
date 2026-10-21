@@ -57,11 +57,15 @@
 
   var segColor = {}; Object.keys(G.segments).forEach(function (k) { segColor[k] = G.segments[k][1]; });
   var map = L.map("map", { scrollWheelZoom: false, worldCopyJump: false });
-  /* tile.openstreetmap.org blokuje strony otwierane z pliku (brak nagłówka Referer), a CARTO wymaga teraz klucza API,
-     więc domyślny podkład to Esri World Street Map (bez klucza); OpenTopoMap (poziomice) przydaje się przy trekkingu,
-     OSM działa po wdrożeniu na http(s). */
+  /* tile.openstreetmap.org blokuje strony otwierane z pliku (brak nagłówka Referer), a CARTO wymaga teraz klucza API.
+     Dlatego: na stronie udostępnionej przez http(s) domyślny jest OpenStreetMap (jasne zasady użycia, atrybucja poniżej),
+     a przy otwarciu z pliku (file://) domyślny jest Esri World Street Map (bez klucza). OpenTopoMap (poziomice) jest do wyboru zawsze. */
   var osmAttr = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+  var naSerwerze = /^https?:$/.test(location.protocol);
   var bases = {
+    "OpenStreetMap": L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19, attribution: osmAttr
+    }),
     "Mapa drogowa (Esri)": L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
       maxZoom: 19,
       attribution: 'Tiles &copy; <a href="https://www.esri.com">Esri</a> &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, HERE, OpenStreetMap contributors'
@@ -69,12 +73,9 @@
     "Topograficzna (OpenTopoMap)": L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
       maxZoom: 17, subdomains: "abc",
       attribution: 'Dane: ' + osmAttr + ', SRTM | Styl: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)'
-    }),
-    "OpenStreetMap (tylko z http/https)": L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 18, attribution: osmAttr
     })
   };
-  var tiles = bases["Mapa drogowa (Esri)"].addTo(map);
+  var tiles = bases[naSerwerze ? "OpenStreetMap" : "Mapa drogowa (Esri)"].addTo(map);
   L.control.layers(bases, null, { position: "topright", collapsed: true }).addTo(map);
   var loaded = 0, errors = 0;
   Object.keys(bases).forEach(function (k) {
